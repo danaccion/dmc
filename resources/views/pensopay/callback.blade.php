@@ -5,5 +5,5 @@
     <div class="alert alert-danger" role="alert">
        Callback
     </div>
-</div>
+</div>  
 @endsection
