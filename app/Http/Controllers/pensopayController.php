@@ -148,15 +148,17 @@ class pensopayController extends Controller
                 'vat_rate' => 0.25
             ]
         ];
+		$order_id='';
+		 $random_number = mt_rand(100000, 999999);
 
-        $order_id = '1234111122022111';
+		 $order_id .= $random_number;
         $facilitator = 'creditcard';
         $amount = 500;
         $currency = 'DKK';
         $testmode = true;
-        $success_url = 'https://www.google.com/search?q=success';
-        $cancel_url = 'https://www.google.com/search?q=cancel';
-        $callback_url = 'https://www.google.com/search?q=callback';
+        $success_url = route('success');
+        $cancel_url = route('cancel');
+        $callback_url = route('callback');
         $autocapture = false;
 
         $data = [
@@ -197,5 +199,20 @@ class pensopayController extends Controller
         header('Location: '.$data['link']);
         curl_close($ch);
         exit;
+    }
+
+    public function getSuccess(Request $request)
+    {
+        return view('pensopay.success');
+    }
+
+    public function getCancel(Request $request)
+    {
+        return view('pensopay.cancel');
+    }
+
+    public function getCallback(Request $request)
+    {
+        return view('pensopay.callback');
     }
 }

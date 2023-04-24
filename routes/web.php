@@ -21,6 +21,12 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::get('/success', [App\Http\Controllers\pensopayController::class, 'getSuccess'])->name('success');
+
+Route::get('/cancel', [App\Http\Controllers\pensopayController::class, 'getCancel'])->name('cancel');
+
+Route::get('/callback', [App\Http\Controllers\pensopayController::class, 'getCallback'])->name('callback');
+
 Route::resource('pensopay', App\Http\Controllers\pensopayController::class);
 
 Route::get('/pensopay', [App\Http\Controllers\pensopayController::class, 'pensopay'])->name('pensopay');
