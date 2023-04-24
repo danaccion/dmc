@@ -30,3 +30,7 @@ Route::get('/callback', [App\Http\Controllers\pensopayController::class, 'getCal
 Route::resource('pensopay', App\Http\Controllers\pensopayController::class);
 
 Route::get('/pensopay', [App\Http\Controllers\pensopayController::class, 'pensopay'])->name('pensopay');
+
+Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
+Route::delete('/clients/{id}', [App\Http\Controllers\HomeController::class, 'delete'])->name('clients.delete');
+Route::get('/clients/search', [HomeController::class, 'search'])->name('clients.search');
