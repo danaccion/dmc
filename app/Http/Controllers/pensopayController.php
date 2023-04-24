@@ -52,7 +52,7 @@ class pensopayController extends Controller
             ]
         ];
 
-        $order_id = '1234';
+        $order_id = '1234777';
         $facilitator = 'creditcard';
         $amount = 500;
         $currency = 'DKK';

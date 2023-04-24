@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Client; 
 
 class HomeController extends Controller
 {
@@ -23,6 +24,27 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $clients = Client::all(); // retrieve all clients from the database
+    
+        return view('home', compact('clients'));
     }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        $clients = Client::where('name', 'LIKE', "%$query%")
+                    ->orWhere('email', 'LIKE', "%$query%")
+                    ->get();
+
+        return view('home', compact('clients'));
+    }
+
+    public function delete($id)
+    {
+        dd($id);
+        Client::findOrFail($id)->delete();
+        return redirect()->route('home')->with('success', 'Client deleted successfully');
+    }
+
 }
