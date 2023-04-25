@@ -149,9 +149,9 @@ class pensopayController extends Controller
             ]
         ];
 		$order_id='';
-		 $random_number = mt_rand(100000, 999999);
+		$random_number = mt_rand(100000, 999999);
 
-		 $order_id .= $random_number;
+		$order_id .= $random_number;
         $facilitator = 'creditcard';
         $amount = 500;
         $currency = 'DKK';
@@ -199,6 +199,42 @@ class pensopayController extends Controller
         header('Location: '.$data['link']);
         curl_close($ch);
         exit;
+    }
+
+    function sign($params, $api_key) {
+        $flattened_params = $this->flatten_params($params);
+        ksort($flattened_params);
+        $base = implode(" ", $flattened_params);
+        dd(hash_hmac("sha256", $base, $api_key));
+        return hash_hmac("sha256", $base, $api_key);
+    }
+    
+    function flatten_params($obj, $result = array(), $path = array()) {
+        if (is_array($obj)) {
+            foreach ($obj as $k => $v) {
+                $result = array_merge($result, $this->flatten_params($v, $result, array_merge($path, array($k))));
+            }
+        } else {
+            $result[implode("", array_map(function($p) { return "[{$p}]"; }, $path))] = $obj;
+        }
+    
+        return $result;
+    }
+
+    public function pensopayForm(){
+        $params = array(
+            "version"      => "v10",
+            "merchant_id"  => 150863,
+            "agreement_id" => 632923,
+            "order_id"     => "0001",
+            "amount"       => 100,
+            "currency"     => "DKK",
+            "continueurl" => "http://shop.domain.tld/continue",
+            "cancelurl"   => "http://shop.domain.tld/cancel",
+            "callbackurl" => "http://shop.domain.tld/callback",
+          );
+          
+          $params["checksum"] = $this->sign($params, "ed93f788f699c42aefa8a6713794b4d347ff493ecce1aca660581fb1511a1816");
     }
 
     public function getSuccess(Request $request)

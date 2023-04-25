@@ -21,6 +21,16 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+// QUICKPAY API
+
+Route::get('/getAllPayment', [App\Http\Controllers\QuickPayController::class, 'getAllPayment'])->name('getAllPayment');
+
+Route::get('/pay', [App\Http\Controllers\QuickPayController::class, 'pay'])->name('pay');
+
+// QUICKPAY API
+
+// PENSOPAY API
+
 Route::get('/success', [App\Http\Controllers\pensopayController::class, 'getSuccess'])->name('success');
 
 Route::get('/cancel', [App\Http\Controllers\pensopayController::class, 'getCancel'])->name('cancel');
@@ -31,6 +41,9 @@ Route::resource('pensopay', App\Http\Controllers\pensopayController::class);
 
 Route::get('/pensopay', [App\Http\Controllers\pensopayController::class, 'pensopay'])->name('pensopay');
 
+Route::get('/pensopayForm', [App\Http\Controllers\pensopayController::class, 'pensopayForm'])->name('pensopayForm');
+
+// PENSOPAY API
 Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
 Route::delete('/clients/{id}', [App\Http\Controllers\HomeController::class, 'delete'])->name('clients.delete');
 Route::get('/clients/search', [HomeController::class, 'search'])->name('clients.search');
