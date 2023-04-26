@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ClientController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,11 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::middleware('auth')->prefix('client')->name('client.')->group(function () {
+
+    Route::get('/',[ClientController::class, 'clientIndex'])->name('index');
+
+});
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 // QUICKPAY API
