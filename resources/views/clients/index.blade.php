@@ -30,7 +30,8 @@
                                     <i class="bi bi-search float-end mt-1"> </i>
                                 </button>
                             </div>
-                        </form>
+                    </form>
+                        @if(!empty($client))
                         <div class="col-md-12 mb-5">
                             <h3 class="text-muted"> Company Name, </h3>
                             <span class="text-muted">
@@ -49,7 +50,7 @@
                                     <a href=""
                                         class="btn btn-primary form-control rounded-0 mb-2"
                                         target="_blank"
-                                        download="{{ $client->client_info->file }}">
+                                        download="{{ !empty($client->client_info) ? $client->client_info->file : '' }}">
                                         Download Invoice
                                         <i class="bi bi-download float-end mt-1"> </i>
                                     </a>
@@ -83,6 +84,7 @@
                             </span>
                         </div>
                         <form method="post" action="{{ route('client.payment.pensopay',$client) }}">
+                            @csrf
                             <div class="col-md-12 mb-2">
                                 <input type="radio" class="form-check-input mr-2" name="conditions">
                                 <span class="text-muted">
@@ -91,13 +93,13 @@
                                 @include('components.alerts.single-error')
                             </div>
                             <div class="col-md-6">
-                                    @csrf
-                                    <button type="submit" onclick="return confirm('Please confirm transaction.')" class="btn btn-success form-control rounded-0">
-                                        Pay
-                                        <i class="bi bi-credit-card-2-front float-end mt-1"> </i>
-                                    </button>
+                                <button type="submit" onclick="return confirm('Please confirm transaction.')" class="btn btn-success form-control rounded-0">
+                                    Pay
+                                    <i class="bi bi-credit-card-2-front float-end mt-1"> </i>
+                                </button>
                             </div>
                         </form>
+                        @endif
                     </div>
                 </div>
             </div>

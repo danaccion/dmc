@@ -124,8 +124,8 @@ class pensopayController extends Controller
 
 		$order_id = $client->client_info->invoice_no;
         $facilitator = 'creditcard';
-        $amount = 500;
-        $currency = 'DKK';
+        $amount = $client->client_info->orig_amount;
+        $currency = $client->client_info->currency;
         $testmode = true;
         $success_url = route('success');
         $cancel_url = route('cancel');
