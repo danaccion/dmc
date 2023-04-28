@@ -49,7 +49,7 @@
                                     <a href=""
                                         class="btn btn-primary form-control rounded-0 mb-2"
                                         target="_blank"
-                                        download="{{ $client->client_info->file }}">
+                                        download="{{ !empty($client->client_info) ? $client->client_info->file : '' }}">
                                         Download Invoice
                                         <i class="bi bi-download float-end mt-1"> </i>
                                     </a>
