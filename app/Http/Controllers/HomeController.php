@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Client; 
+use App\Models\Client;
 
 class HomeController extends Controller
 {
@@ -25,7 +25,7 @@ class HomeController extends Controller
     public function index()
     {
         $clients = Client::all(); // retrieve all clients from the database
-    
+
         return view('home', compact('clients'));
     }
 
