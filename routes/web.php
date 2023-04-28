@@ -37,6 +37,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('/getAllPayment', [App\Http\Controllers\QuickPayController::class, 'getAllPayment'])->name('getAllPayment');
 
+Route::get('/getAllPaymentByOrderId', [App\Http\Controllers\QuickPayController::class, 'getAllPaymentByOrderId'])->name('/getAllPaymentByOrderId');
+
+
 Route::get('/pay', [App\Http\Controllers\QuickPayController::class, 'pay'])->name('pay');
 
 // QUICKPAY API
@@ -47,7 +50,7 @@ Route::get('/success', [App\Http\Controllers\pensopayController::class, 'getSucc
 
 Route::get('/cancel', [App\Http\Controllers\pensopayController::class, 'getCancel'])->name('cancel');
 
-Route::get('/callback', [App\Http\Controllers\pensopayController::class, 'getCallback'])->name('callback');
+Route::post('/callback', [App\Http\Controllers\pensopayController::class, 'getCallback'])->name('callback');
 
 Route::resource('pensopay', App\Http\Controllers\pensopayController::class);
 
