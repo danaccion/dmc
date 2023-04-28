@@ -30,7 +30,8 @@
                                     <i class="bi bi-search float-end mt-1"> </i>
                                 </button>
                             </div>
-                        </form>
+                    </form>
+                        @if(!empty($client))
                         <div class="col-md-12 mb-5">
                             <h3 class="text-muted"> Company Name, </h3>
                             <span class="text-muted">
@@ -77,7 +78,6 @@
                                 </h3>
                             </span>
                         </div>
-                        @if(!empty($client))
                         <div class="col-md-12 mb-2">
                             <span class="text-muted fw-bold">
                                 Please accept DMC condition
