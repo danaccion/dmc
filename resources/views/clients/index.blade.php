@@ -18,6 +18,7 @@
                     <div class="mb-5">
                         <h3 class="text-muted"> Welcome to DMC Pay</h3>
                     </div>
+                    @include('components.alerts.success')
                     <form method="get">
                         <div class="row">
                             <div class="col-md-6">
@@ -45,7 +46,7 @@
                             <label class="text-muted"> You can see your invoice here </label>
                             <div class="row">
                                 <div class="col-md-5">
-                                    <a href="{{ route('client.download-pdf',$client) }}"
+                                    <a href=""
                                         class="btn btn-primary form-control rounded-0 mb-2"
                                         target="_blank"
                                         download="{{ $client->client_info->file }}">
@@ -81,18 +82,22 @@
                                 Please accept DMC condition
                             </span>
                         </div>
-                        <div class="col-md-12 mb-2">
-                            <input type="radio" class="form-check-input mr-2" name="conditions">
-                            <span class="text-muted">
-                                {{ $conditions }}
-                            </span>
-                        </div>
-                        <div class="col-md-6">
-                            <button type="button" onclick="test()" class="btn btn-success form-control rounded-0">
-                                Pay
-                                <i class="bi bi-credit-card-2-front float-end mt-1"> </i>
-                            </button>
-                        </div>
+                        <form method="post" action="{{ route('client.payment.pensopay',$client) }}">
+                            <div class="col-md-12 mb-2">
+                                <input type="radio" class="form-check-input mr-2" name="conditions">
+                                <span class="text-muted">
+                                    {{ $conditions }}
+                                </span>
+                                @include('components.alerts.single-error')
+                            </div>
+                            <div class="col-md-6">
+                                    @csrf
+                                    <button type="submit" onclick="return confirm('Please confirm transaction.')" class="btn btn-success form-control rounded-0">
+                                        Pay
+                                        <i class="bi bi-credit-card-2-front float-end mt-1"> </i>
+                                    </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\pensopayController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +25,11 @@ Route::middleware('auth')->prefix('client')->name('client.')->group(function () 
 
     Route::get('/',[ClientController::class, 'clientIndex'])->name('index');
 
+    Route::prefix('payment')->name('payment.')->group(function() {
+
+        Route::post('/pensopay/{client}',[pensopayController::class,'pensopay'])->name('pensopay');
+
+    });
 });
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -45,7 +51,6 @@ Route::get('/callback', [App\Http\Controllers\pensopayController::class, 'getCal
 
 Route::resource('pensopay', App\Http\Controllers\pensopayController::class);
 
-Route::get('/pensopay', [App\Http\Controllers\pensopayController::class, 'pensopay'])->name('pensopay');
 
 Route::get('/pensopayForm', [App\Http\Controllers\pensopayController::class, 'pensopayForm'])->name('pensopayForm');
 
