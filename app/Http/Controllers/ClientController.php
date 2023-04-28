@@ -20,6 +20,7 @@ class ClientController extends Controller
         else {
             $client = null;
         }
+
         return view('clients.index', [
             'client' => $client,
             's' => $s,
