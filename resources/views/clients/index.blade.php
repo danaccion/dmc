@@ -19,6 +19,7 @@
                         <h3 class="text-muted"> Welcome to DMC Pay</h3>
                     </div>
                     @include('components.alerts.success')
+                    @include('components.alerts.single-error')
                     <form method="get">
                         <div class="row">
                             <div class="col-md-6">
@@ -90,7 +91,6 @@
                                 <span class="text-muted">
                                     {{ $conditions }}
                                 </span>
-                                @include('components.alerts.single-error')
                             </div>
                             <div class="col-md-6">
                                 <button type="submit" onclick="return confirm('Please confirm transaction.')" class="btn btn-success form-control rounded-0">
