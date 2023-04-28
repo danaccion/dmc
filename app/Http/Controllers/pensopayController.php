@@ -122,16 +122,15 @@ class pensopayController extends Controller
             ],
         ];
 
-		$order_id = $client->client_info->invoice_no;
+		$order_id = intval($client->client_info->invoice_no);
         $facilitator = 'creditcard';
-        $amount = $client->client_info->orig_amount;
+        $amount = intval($client->client_info->orig_amount);
         $currency = $client->client_info->currency;
         $testmode = true;
         $success_url = route('success');
         $cancel_url = route('cancel');
         $callback_url = route('callback');
         $autocapture = true;
-
         $data = [
             'order' => $order,
             'order_id' => $order_id,
@@ -166,9 +165,10 @@ class pensopayController extends Controller
         if (curl_errno($ch)) {
             echo 'Error:' . curl_error($ch);
         }
-        echo $data['link'];
+        // print_r($result);
+        // echo $data['link'];
         header('Location: '.$data['link']);
-        curl_close($ch);
+        // curl_close($ch);
         exit;
     }
 

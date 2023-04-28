@@ -8,6 +8,28 @@ use QuickPay\QuickPay;
 class QuickPayController extends Controller
 {
 
+    public function getAllPaymentByOrderId(Request $request)
+    {
+        // Get all payments By Order ID
+        try {
+            $api_key = 'c131a294f2a44ff648ade3941195fcda6a83c2b579e788ac16327b8701735c1b';
+            $client = new QuickPay(":{$api_key}");
+            // Create payment
+            $payments = $client->request->get('/payments?order_id='.$request->id);
+                $status = $payments->httpStatus();
+                if ($status == 200) {
+                    $jsonObj = json_encode($payments);
+                    $responseData = json_decode($jsonObj);
+                    $responseData = $responseData->response_data;
+                    $array = $responseData;
+                    print_r($array);
+                }
+            } catch (Exception $e) {
+                echo $e;
+            }
+    }
+
+
     public function getAllPayment()
     {
         // Get all payments
