@@ -8,7 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>
-        @yield('title', 'Purple Roof') - {{ config('app.name') }}
+        @yield('title', 'DMC') - {{ config('app.name') }}
     </title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <!-- Fonts -->

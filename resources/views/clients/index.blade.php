@@ -45,22 +45,36 @@
                             <label class="text-muted"> You can see your invoice here </label>
                             <div class="row">
                                 <div class="col-md-5">
-                                    <button type="submit" class="btn btn-primary form-control rounded-0 mb-2">
+                                    <a href="{{ route('client.download-pdf',$client) }}"
+                                        class="btn btn-primary form-control rounded-0 mb-2"
+                                        target="_blank"
+                                        download="{{ $client->client_info->file }}">
                                         Download Invoice
                                         <i class="bi bi-download float-end mt-1"> </i>
-                                    </button>
+                                    </a>
                                 </div>
                                 <div class="col-md-5">
-                                    <button type="submit" class="btn btn-primary form-control rounded-0 mb-2">
+                                    <a href="{{ !empty($client->client_info->file) ? $client->client_info->file : 'Unknown' }}"
+                                        class="btn btn-primary form-control rounded-0 mb-2"
+                                        target="_blank">
                                         View Invoice
                                         <i class="bi bi-view-list float-end mt-1"> </i>
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-12 mb-2">
-                            <span class="text-muted"> Your order no. is <h3 class="fw-bold"> 012312 </h3></span>
-                            <span class="text-muted"> Total amount <h3 class="fw-bold"> DKK 1 </h3></span>
+                            <span class="text-muted"> Your order no. is
+                                <h3 class="fw-bold">
+                                    {{ !empty($client->client_info) ? $client->client_info->invoice_no : 'No data'}}
+                                </h3>
+                            </span>
+                            <span class="text-muted"> Total amount
+                                <h3 class="fw-bold">
+                                    {{ !empty($client->client_info) ? $client->client_info->currency : '' }}
+                                    {{ !empty($client->client_info) ? $client->client_info->orig_amount : '0.00' }}
+                                </h3>
+                            </span>
                         </div>
                         <div class="col-md-12 mb-2">
                             <span class="text-muted fw-bold">

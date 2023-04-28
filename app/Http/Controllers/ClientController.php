@@ -12,6 +12,7 @@ class ClientController extends Controller
         $s = $request->s ?? "";
         if(!empty($s)) {
             $client = Client::query()
+                ->with('client_info')
                 ->where('pay_no',$s)
                 ->Orwhere('name', $s)
                 ->first();
