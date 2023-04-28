@@ -77,12 +77,14 @@
                                 </h3>
                             </span>
                         </div>
+                        @if(!empty($client))
                         <div class="col-md-12 mb-2">
                             <span class="text-muted fw-bold">
                                 Please accept DMC condition
                             </span>
                         </div>
                         <form method="post" action="{{ route('client.payment.pensopay',$client) }}">
+                            @csrf
                             <div class="col-md-12 mb-2">
                                 <input type="radio" class="form-check-input mr-2" name="conditions">
                                 <span class="text-muted">
@@ -91,13 +93,13 @@
                                 @include('components.alerts.single-error')
                             </div>
                             <div class="col-md-6">
-                                    @csrf
-                                    <button type="submit" onclick="return confirm('Please confirm transaction.')" class="btn btn-success form-control rounded-0">
-                                        Pay
-                                        <i class="bi bi-credit-card-2-front float-end mt-1"> </i>
-                                    </button>
+                                <button type="submit" onclick="return confirm('Please confirm transaction.')" class="btn btn-success form-control rounded-0">
+                                    Pay
+                                    <i class="bi bi-credit-card-2-front float-end mt-1"> </i>
+                                </button>
                             </div>
                         </form>
+                        @endif
                     </div>
                 </div>
             </div>
