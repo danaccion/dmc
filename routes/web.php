@@ -39,6 +39,9 @@ Route::get('/getAllPayment', [App\Http\Controllers\QuickPayController::class, 'g
 
 Route::get('/getAllPaymentByOrderId', [App\Http\Controllers\QuickPayController::class, 'getAllPaymentByOrderId'])->name('/getAllPaymentByOrderId');
 
+Route::get('/deletePaymentById', [App\Http\Controllers\QuickPayController::class, 'deletePaymentById'])->name('/deletePaymentById');
+
+Route::get('/getHistory', [App\Http\Controllers\QuickPayController::class, 'getHistory'])->name('/getHistory');
 
 Route::get('/pay', [App\Http\Controllers\QuickPayController::class, 'pay'])->name('pay');
 
