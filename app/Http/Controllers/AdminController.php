@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Client;
 
-class HomeController extends Controller
+class AdminController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -26,7 +26,7 @@ class HomeController extends Controller
     {
         $clients = Client::all(); // retrieve all clients from the database
 
-        return view('home', compact('clients'));
+        return view('admin', compact('clients'));
     }
 
     public function search(Request $request)
