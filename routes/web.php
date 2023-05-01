@@ -31,7 +31,7 @@ Route::middleware('auth')->prefix('client')->name('client.')->group(function () 
 
     });
 });
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/admin', [App\Http\Controllers\HomeController::class, 'index'])->name('admin');
 
 // QUICKPAY API
 
