@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use Illuminate\Http\Request;
 
 class pensopayController extends Controller
 {
-    //
     public function post(Request $request)
     {
         $order = [
@@ -94,7 +94,7 @@ class pensopayController extends Controller
         $result = curl_exec($ch);
         $data = json_decode($result, true);
         foreach ($data['Results'] as $result) {
-                echo $result['link']; 
+                echo $result['link'];
                 header("Location: ".$result['link']);
         };
 
@@ -103,64 +103,34 @@ class pensopayController extends Controller
         }
         curl_close($ch);
     }
-    
-    public function pensopay(Request $request)
+
+    public function pensopay(Client $client, Request $request)
     {
+        if(empty($request->conditions))
+        {
+            return back()->with('single-error','Please agree the terms and conditions.');
+        }
+        $client->load('client_info');
         $order = [
             'billing_address' => [
-                'name' => 'Firstname Lastname',
-                'address' => 'Søndergade 23b, 2.t.v.',
-                'zipcode' => '7100',
-                'city' => 'Vejle',
-                'country' => 'DNK',
-                'email' => 'support@pensopay.com',
-                'phone_number' => '77344388',
-                'mobile_number' => '77344388'
+                'name' => auth()->user()->name,
+                'client_company' => $client->name,
+                'address' => $client->country,
+                'pay_no' => $client->pay_no,
+                'currency' => $client->client_info->currency,
+                'email' => auth()->user()->email,
             ],
-            'shipping_address' => [
-                'name' => 'Firstname Lastname',
-                'address' => 'Søndergade 23b, 2.t.v.',
-                'zipcode' => '7100',
-                'city' => 'Vejle',
-                'country' => 'DNK',
-                'email' => 'support@pensopay.com',
-                'phone_number' => '77344388',
-                'mobile_number' => '77344388'
-            ],
-            'basket' => [
-                0 => [
-                    'qty' => 1,
-                    'sku' => 'item-sku',
-                    'vat' => 0.25,
-                    'name' => 'My awesome item',
-                    'price' => 500
-                ],
-                'qty' => 20,
-                'name' => 'Warren Arendain',
-                'vat' => 212071.6,
-                'sku' => 'omnis',
-                'price' => 11
-            ],
-            'shipping' => [
-                'amount' => 4900,
-                'method' => 'own_delivery',
-                'company' => 'My shipping company',
-                'vat_rate' => 0.25
-            ]
         ];
-		$order_id='';
-		 $random_number = mt_rand(100000, 999999);
 
-		 $order_id .= $random_number;
+		$order_id = intval($client->client_info->invoice_no);
         $facilitator = 'creditcard';
-        $amount = 500;
-        $currency = 'DKK';
+        $amount = intval($client->client_info->orig_amount);
+        $currency = $client->client_info->currency;
         $testmode = true;
         $success_url = route('success');
         $cancel_url = route('cancel');
         $callback_url = route('callback');
         $autocapture = true;
-
         $data = [
             'order' => $order,
             'order_id' => $order_id,
@@ -195,10 +165,47 @@ class pensopayController extends Controller
         if (curl_errno($ch)) {
             echo 'Error:' . curl_error($ch);
         }
-        echo $data['link'];
+        // print_r($result);
+        // echo $data['link'];
         header('Location: '.$data['link']);
-        curl_close($ch);
+        // curl_close($ch);
         exit;
+    }
+
+    function sign($params, $api_key) {
+        $flattened_params = $this->flatten_params($params);
+        ksort($flattened_params);
+        $base = implode(" ", $flattened_params);
+        dd(hash_hmac("sha256", $base, $api_key));
+        return hash_hmac("sha256", $base, $api_key);
+    }
+
+    function flatten_params($obj, $result = array(), $path = array()) {
+        if (is_array($obj)) {
+            foreach ($obj as $k => $v) {
+                $result = array_merge($result, $this->flatten_params($v, $result, array_merge($path, array($k))));
+            }
+        } else {
+            $result[implode("", array_map(function($p) { return "[{$p}]"; }, $path))] = $obj;
+        }
+
+        return $result;
+    }
+
+    public function pensopayForm(){
+        $params = array(
+            "version"      => "v10",
+            "merchant_id"  => 150863,
+            "agreement_id" => 632923,
+            "order_id"     => "0001",
+            "amount"       => 100,
+            "currency"     => "DKK",
+            "continueurl" => "http://shop.domain.tld/continue",
+            "cancelurl"   => "http://shop.domain.tld/cancel",
+            "callbackurl" => "http://shop.domain.tld/callback",
+          );
+
+          $params["checksum"] = $this->sign($params, "ed93f788f699c42aefa8a6713794b4d347ff493ecce1aca660581fb1511a1816");
     }
 
     public function getSuccess(Request $request)

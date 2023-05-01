@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e93aebb76ead2a416a5e04bf439ea85e",
+    "content-hash": "2ff22956ac09dd99e648ab668caba71c",
     "packages": [
         {
             "name": "brick/math",
@@ -2822,6 +2822,48 @@
                 "source": "https://github.com/bobthecow/psysh/tree/v0.11.12"
             },
             "time": "2023-01-29T21:24:40+00:00"
+        },
+        {
+            "name": "quickpay/quickpay-php-client",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/QuickPay/quickpay-php-client.git",
+                "reference": "4c581acd8dd80e677cf46a4dea5231ef4ef153f5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/QuickPay/quickpay-php-client/zipball/4c581acd8dd80e677cf46a4dea5231ef4ef153f5",
+                "reference": "4c581acd8dd80e677cf46a4dea5231ef4ef153f5",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.2.1",
+                "phpstan/phpstan": "^1.1.2",
+                "phpunit/phpunit": "^9.5",
+                "thecodingmachine/phpstan-strict-rules": "^1.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "QuickPay\\": "QuickPay/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHP-SDK to communicate with the payment provider QuickPay",
+            "homepage": "https://github.com/QuickPay/quickpay-php-client",
+            "support": {
+                "issues": "https://github.com/QuickPay/quickpay-php-client/issues",
+                "source": "https://github.com/QuickPay/quickpay-php-client/tree/2.0.0"
+            },
+            "time": "2022-09-19T10:31:11+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -8095,9 +8137,9 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "alpha",
+    "minimum-stability": "dev",
     "stability-flags": [],
-    "prefer-stable": false,
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.0.2"
