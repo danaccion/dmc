@@ -19,7 +19,9 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/test-user', [ClientController::class, 'index'])->middleware(['auth', 'is-active']);
+
+Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'] )->name('admin');
 
 Route::get('/success', [App\Http\Controllers\pensopayController::class, 'getSuccess'])->name('success');
 
@@ -32,5 +34,5 @@ Route::resource('pensopay', App\Http\Controllers\pensopayController::class);
 Route::get('/pensopay', [App\Http\Controllers\pensopayController::class, 'pensopay'])->name('pensopay');
 
 Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
-Route::delete('/clients/{id}', [App\Http\Controllers\HomeController::class, 'delete'])->name('clients.delete');
-Route::get('/clients/search', [HomeController::class, 'search'])->name('clients.search');
+Route::delete('/clients/{id}', [App\Http\Controllers\AdminController::class, 'delete'])->name('clients.delete');
+Route::get('/clients/search', [AdminController::class, 'search'])->name('clients.search');
