@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClientInfo;
 use Illuminate\Http\Request;
 use QuickPay\QuickPay;
 
@@ -60,68 +61,79 @@ class QuickPayController extends Controller
                     $jsonObj = json_encode($payments);
                     $responseData = json_decode($jsonObj);
                     $response = $responseData->response_data;
-                    $this->getTableOrder($response,$responseData);
-                }
-            } catch (Exception $e) {
-                echo $e;
-            }
+                    // $this->getTableOrder($response,$responseData);
+                $output = '';
+
+                $output .= '<table>
+                                    <tr>
+                                    <th>No.</th>
+                                    <th>Payment id</th>
+                                    <th>Company Name</th>
+                                    <th>Invoice No</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th>Date Paid</th>
+                                    </tr>';
+
+                                    $array = json_decode($response, true);
+                                    $count = 0;
+                                    foreach($array as $item){
+                                        $count++;
+                                        $output .= "<tr>";
+                                        $output .= "<td>".$count."</td>";
+                                        $output .= "<td>".$item['id']."</td>";
+                                        $output .= "<td>".$item['metadata']['shopsystem_name']."</td>";
+                                        $output .= "<td><button id='view' class='view' value={$item['order_id']}>View</button> ".$item['order_id']."</td>";
+                                        if(!empty($item['operations'])){
+                                            $output .= "<td>".$item['operations'][0]['amount']."</td>";
+                                            if($item['operations'][0]['qp_status_code'] == 20000)
+                                            {
+                                                $code = "Approved";
+                                            }
+                                            else if( $item['operations'][0]['qp_status_code'] == 40000){
+                                                $code = "Rejected";
+                                            }
+                                            else if( $item['operations'][0]['qp_status_code'] == 50000){
+                                                $code = "Gateaway Error";
+                                            }
+                                            else if( $item['operations'][0]['qp_status_code'] == 40001){
+                                                $code = "Request Data Error";
+                                            }
+                                            else if( $item['operations'][0]['qp_status_code'] == 40002){
+                                                $code = "Authorization expired";
+                                            }
+                                            else if( $item['operations'][0]['qp_status_code'] == 40003){
+                                                $code = "Aborted";
+                                            }
+                                            $output .= "<td>".$code."</td>";
+                                            $output .= "<td>".$item['operations'][0]['created_at']."</td>";
+                                        }else{
+                                            $output .= "<td>0</td>";
+                                            $output .= "<td>Un-Paid</td>";
+                                            $output .= "<td>".$item['created_at']."</td>";
+                                        }
+                                        $output .= "</tr>";
+                                    }
+                                    $output .= '
+                                </table>';
+                                return view('quickpay.table',['orders' => $output]);
+                                }
+                            } catch (Exception $e) {
+                                echo $e;
+                            }
     }
 
-    function getTableOrder($response,$responseData)
+    public function getInvoice(Request $request)
     {
-        echo '<table>
-        <tr>
-          <th>No.</th>
-          <th>Payment id</th>
-          <th>Company Name</th>
-          <th>Invoice No</th>
-          <th>Price</th>
-          <th>Status</th>
-          <th>Date Paid</th>
-        </tr>';
-        $array = json_decode($response, true);
-        $count = 0;
-        foreach($array as $item){
-            $count++;
-            echo "<tr>";
-            echo "<td>".$count."</td>";
-            echo "<td>".$item['id']."</td>";
-            echo "<td>".$item['metadata']['shopsystem_name']."</td>";
-            echo "<td>".$item['order_id']."</td>";
-            if(!empty($item['operations'])){
-                echo "<td>".$item['operations'][0]['amount']."</td>";
-                if($item['operations'][0]['qp_status_code'] == 20000)
-                {
-                    $code = "Approved";
-                }
-                else if( $item['operations'][0]['qp_status_code'] == 40000){
-                    $code = "Rejected";
-                }
-                else if( $item['operations'][0]['qp_status_code'] == 50000){
-                    $code = "Gateaway Error";
-                }
-                else if( $item['operations'][0]['qp_status_code'] == 40001){
-                    $code = "Request Data Error";
-                }
-                else if( $item['operations'][0]['qp_status_code'] == 40002){
-                    $code = "Authorization expired";
-                }
-                else if( $item['operations'][0]['qp_status_code'] == 40003){
-                    $code = "Aborted";
-                }
-                echo "<td>".$code."</td>";
-                echo "<td>".$item['operations'][0]['created_at']."</td>";
-            }else{
-                echo "<td>0</td>";
-                echo "<td>Un-Paid</td>";
-                echo "<td>".$item['created_at']."</td>";
-            }
-            echo "</tr>";
-        }
-        echo '
-      </table>';
+        // Get all payments By Order ID
+        $clientInfoIds = ClientInfo::where('invoice_no', '=', $request->viewId)->pluck('file');
+        return response()->json($clientInfoIds);
     }
 
+    public function quickPayTable()
+    {
+        return view('quickpay.table');
+    }
 
     public function getAllPayment()
     {

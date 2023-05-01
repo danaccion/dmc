@@ -10,6 +10,7 @@
     <title>
         @yield('title', 'DMC') - {{ config('app.name') }}
     </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -84,3 +85,28 @@
     </div>
 </body>
 </html>
+<script>
+ $(document).ready(function() {
+
+    $(".view").on("click", function(){
+        var viewId = $(this).val();
+        $.ajax({
+            url:"{{ route('/getInvoice') }}",
+            type: 'GET',
+            dataType: 'json',
+            data:{
+                "_token": "{{ csrf_token() }}",
+                viewId : viewId,
+            },
+            success: function(data) {
+               console.log(data);
+               window.open("path/to/"+data, "_blank");
+            },
+            error: function(response) {
+                    alert('error');
+            },
+        });
+    });
+});
+
+</script>
