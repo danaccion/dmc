@@ -35,6 +35,8 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 // QUICKPAY API
 
+Route::get('/quickPayTable', [App\Http\Controllers\QuickPayController::class, 'quickPayTable'])->name('quickPayTable');
+
 Route::get('/getAllPayment', [App\Http\Controllers\QuickPayController::class, 'getAllPayment'])->name('getAllPayment');
 
 Route::get('/getAllPaymentByOrderId', [App\Http\Controllers\QuickPayController::class, 'getAllPaymentByOrderId'])->name('/getAllPaymentByOrderId');
@@ -42,6 +44,8 @@ Route::get('/getAllPaymentByOrderId', [App\Http\Controllers\QuickPayController::
 Route::get('/deletePaymentById', [App\Http\Controllers\QuickPayController::class, 'deletePaymentById'])->name('/deletePaymentById');
 
 Route::get('/getHistory', [App\Http\Controllers\QuickPayController::class, 'getHistory'])->name('/getHistory');
+
+Route::get('/getInvoice', [App\Http\Controllers\QuickPayController::class, 'getInvoice'])->name('/getInvoice');
 
 Route::get('/pay', [App\Http\Controllers\QuickPayController::class, 'pay'])->name('pay');
 
