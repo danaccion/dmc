@@ -44,6 +44,9 @@
                     </label>
                 </div>
                 @endforeach
+                <div class="d-flex" style="position:relative;">
+                {{ $clients->links() }}
+                </div>
                 <hr>
                 <button type="submit" value="Delete" class="btn btn-danger">Delete selected clients</button>
             </form>

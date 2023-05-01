@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Client; 
-
-class HomeController extends Controller
+use DB;
+class AdminController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -24,9 +24,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $clients = Client::all(); // retrieve all clients from the database
-    
-        return view('home', compact('clients'));
+        $clients = DB::table('gkojgnvu_client')
+        ->where('status', '=', 'ON')
+        ->orderBy('name', 'asc')
+        ->paginate(15); // retrieve all clients from the database
+        return view('admin', compact('clients'));
     }
 
     public function search(Request $request)
@@ -37,12 +39,11 @@ class HomeController extends Controller
                     ->orWhere('email', 'LIKE', "%$query%")
                     ->get();
 
-        return view('home', compact('clients'));
+        return view('admin', compact('clients'));
     }
 
     public function delete($id)
     {
-        dd($id);
         Client::findOrFail($id)->delete();
         return redirect()->route('home')->with('success', 'Client deleted successfully');
     }
