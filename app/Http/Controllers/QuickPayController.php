@@ -8,6 +8,25 @@ use QuickPay\QuickPay;
 class QuickPayController extends Controller
 {
 
+    public function deletePaymentById(Request $request){
+        try {
+            $api_key = 'c131a294f2a44ff648ade3941195fcda6a83c2b579e788ac16327b8701735c1b';
+            $client = new QuickPay(":{$api_key}");
+            $url = "/payments/{$request->id}/link";
+            echo $url;
+            $payments = $client->request->delete($url);
+                $status = $payments->httpStatus();
+                if ($status == 200) {
+                    $jsonObj = json_encode($payments);
+                    $responseData = json_decode($jsonObj);
+                    $response = $responseData->response_data;
+                    echo $status;
+                }
+            } catch (Exception $e) {
+                echo $e;
+            }
+    }
+
     public function getAllPaymentByOrderId(Request $request)
     {
         // Get all payments By Order ID
