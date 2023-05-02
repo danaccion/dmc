@@ -32,7 +32,9 @@ Route::middleware('auth')->prefix('client')->name('client.')->group(function () 
     });
 });
 
-Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])->name('admin');
+Route::get('/admin', [App\Http\Controllers\HomeController::class, 'index'])->name('admin');
+Route::get('/history', [App\Http\Controllers\QuickPayController::class, 'getHistory'])->name('/history');
+
 
 // QUICKPAY API
 
@@ -44,7 +46,7 @@ Route::get('/getAllPaymentByOrderId', [App\Http\Controllers\QuickPayController::
 
 Route::get('/deletePaymentById', [App\Http\Controllers\QuickPayController::class, 'deletePaymentById'])->name('/deletePaymentById');
 
-Route::get('/getHistory', [App\Http\Controllers\QuickPayController::class, 'getHistory'])->name('/getHistory');
+Route::get('/history', [App\Http\Controllers\QuickPayController::class, 'getHistory'])->name('/getHistory');
 
 Route::get('/getInvoice', [App\Http\Controllers\QuickPayController::class, 'getInvoice'])->name('/getInvoice');
 

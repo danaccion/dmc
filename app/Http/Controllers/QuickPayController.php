@@ -64,7 +64,7 @@ class QuickPayController extends Controller
                     // $this->getTableOrder($response,$responseData);
                 $output = '';
 
-                $output .= '<table>
+                $output .= '<table class="table table-hover mb-2">
                                     <tr>
                                     <th>No.</th>
                                     <th>Payment id</th>
@@ -77,13 +77,14 @@ class QuickPayController extends Controller
 
                                     $array = json_decode($response, true);
                                     $count = 0;
+                                    $button = '<i class="bi bi-eye-fill"> </i>';
                                     foreach($array as $item){
                                         $count++;
-                                        $output .= "<tr>";
-                                        $output .= "<td>".$count."</td>";
-                                        $output .= "<td>".$item['id']."</td>";
-                                        $output .= "<td>".$item['metadata']['shopsystem_name']."</td>";
-                                        $output .= "<td><button id='view' class='view' value={$item['order_id']}>View</button> ".$item['order_id']."</td>";
+                                        $output .= '<tr>';
+                                        $output .= '<td class="text-muted fw-bold">'.$count.'</td>';
+                                        $output .= '<td class="text-muted fw-bold">'.$item['id']."</td>";
+                                        $output .= '<td>'.$item['metadata']['shopsystem_name'].'</td>';
+                                        $output .= '<td><button id="view" class="btn btn-primary" value="'.$item['order_id'].'">'. $button .' '.$item['order_id'].'</button></td>';
                                         if(!empty($item['operations'])){
                                             $output .= "<td>".$item['operations'][0]['amount']."</td>";
                                             if($item['operations'][0]['qp_status_code'] == 20000)
@@ -105,18 +106,19 @@ class QuickPayController extends Controller
                                             else if( $item['operations'][0]['qp_status_code'] == 40003){
                                                 $code = "Aborted";
                                             }
-                                            $output .= "<td>".$code."</td>";
+                                            $data = $code == 'Approved' ? 'badge bg-success' : 'badge bg-danger';
+                                            $output .= '<td class="mt-2 '.$data.'">'.$code.'</td>';
                                             $output .= "<td>".$item['operations'][0]['created_at']."</td>";
                                         }else{
                                             $output .= "<td>0</td>";
-                                            $output .= "<td>Un-Paid</td>";
+                                            $output .= '<td class="mt-2 badge bg-secondary">Un-Paid</td>';
                                             $output .= "<td>".$item['created_at']."</td>";
                                         }
                                         $output .= "</tr>";
                                     }
                                     $output .= '
                                 </table>';
-                                return view('quickpay.table',['orders' => $output]);
+                                return view('quickpay.table',['orders_history' => $output]);
                                 }
                             } catch (Exception $e) {
                                 echo $e;
@@ -157,7 +159,7 @@ class QuickPayController extends Controller
     }
 
     public function pay(){
-       
+
         try {
             $api_key = 'c131a294f2a44ff648ade3941195fcda6a83c2b579e788ac16327b8701735c1b';
             $client = new QuickPay(":{$api_key}");
@@ -170,7 +172,7 @@ class QuickPayController extends Controller
             $currency = 'DKK';
             $testmode = true;
             $autocapture = true;
-            
+
             $initform = array(
                 'order_id' => $order_id,
                 'currency' => $currency,
@@ -189,7 +191,7 @@ class QuickPayController extends Controller
                 }
             } catch (Exception $e) {
                 echo $e;
-            }  
+            }
     }
 
 
