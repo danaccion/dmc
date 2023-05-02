@@ -19,10 +19,7 @@ class ClientInfo extends Model
         'orig_amount',
         'amount',
         'status',
-        'pay_no',
-        'name',
-        'client_currency',
-        'country',
-        'created_at'
+        'created_at',
+        'updated_at'
     ];
 }
