@@ -41,11 +41,71 @@ class QuickPayController extends Controller
                     $jsonObj = json_encode($payments);
                     $responseData = json_decode($jsonObj);
                     $response = $responseData->response_data;
-                    $this->getTableOrder($response,$responseData);
+                    $this->getTableOrder($response);
                 }
             } catch (Exception $e) {
                 echo $e;
             }
+    }
+
+    public function getTableOrder($response)
+    {
+        $output = '';
+
+        $output .= '<table>
+                            <tr>
+                            <th>No.</th>
+                            <th>Payment id</th>
+                            <th>Company Name</th>
+                            <th>Invoice No</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th>Date Paid</th>
+                            </tr>';
+
+                            $array = json_decode($response, true);
+                            $count = 0;
+                            foreach($array as $item){
+                                $count++;
+                                $output .= "<tr>";
+                                $output .= "<td>".$count."</td>";
+                                $output .= "<td>".$item['id']."</td>";
+                                $output .= "<td>".$item['metadata']['shopsystem_name']."</td>";
+                                $output .= "<td><button id='view' class='view' value={$item['order_id']}>View</button> ".$item['order_id']."</td>";
+                                if(!empty($item['operations'])){
+                                    $output .= "<td>".$item['currency']." ".$item['operations'][0]['amount']."</td>";
+                                    if($item['operations'][0]['qp_status_code'] == 20000)
+                                    {
+                                        $code = "Approved";
+                                    }
+                                    else if( $item['operations'][0]['qp_status_code'] == 40000){
+                                        $code = "Rejected";
+                                    }
+                                    else if( $item['operations'][0]['qp_status_code'] == 50000){
+                                        $code = "Gateaway Error";
+                                    }
+                                    else if( $item['operations'][0]['qp_status_code'] == 40001){
+                                        $code = "Request Data Error";
+                                    }
+                                    else if( $item['operations'][0]['qp_status_code'] == 40002){
+                                        $code = "Authorization expired";
+                                    }
+                                    else if( $item['operations'][0]['qp_status_code'] == 40003){
+                                        $code = "Aborted";
+                                    }
+                                    $output .= "<td>".$code."</td>";
+                                    $output .= "<td>".$item['operations'][0]['created_at']."</td>";
+                                }else{
+                                    $output .= "<td>0</td>";
+                                    $output .= "<td>Pending</td>";
+                                    $output .= "<td>".$item['created_at']."</td>";
+                                }
+                                $output .= "</tr>";
+                            }
+                            $output .= '
+                        </table>';
+                        echo $output;
+                        return view('quickpay.table',['orders' => $output]);
     }
 
     public function getHistory(Request $request)
@@ -85,7 +145,7 @@ class QuickPayController extends Controller
                                         $output .= "<td>".$item['metadata']['shopsystem_name']."</td>";
                                         $output .= "<td><button id='view' class='view' value={$item['order_id']}>View</button> ".$item['order_id']."</td>";
                                         if(!empty($item['operations'])){
-                                            $output .= "<td>".$item['operations'][0]['amount']."</td>";
+                                            $output .= "<td>".$item['currency']." ".$item['operations'][0]['amount']."</td>";
                                             if($item['operations'][0]['qp_status_code'] == 20000)
                                             {
                                                 $code = "Approved";
@@ -109,7 +169,7 @@ class QuickPayController extends Controller
                                             $output .= "<td>".$item['operations'][0]['created_at']."</td>";
                                         }else{
                                             $output .= "<td>0</td>";
-                                            $output .= "<td>Un-Paid</td>";
+                                            $output .= "<td>Pending</td>";
                                             $output .= "<td>".$item['created_at']."</td>";
                                         }
                                         $output .= "</tr>";
@@ -149,7 +209,6 @@ class QuickPayController extends Controller
                     $responseData = json_decode($jsonObj);
                     $responseData = $responseData->response_data;
                     $array = $responseData;
-                    print_r($array);
                 }
             } catch (Exception $e) {
                 echo $e;

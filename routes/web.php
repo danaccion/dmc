@@ -32,7 +32,19 @@ Route::middleware('auth')->prefix('client')->name('client.')->group(function () 
     });
 });
 
-Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])->name('admin');
+Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+
+    Route::get('/',[App\Http\Controllers\AdminController::class, 'adminIndex'])->name('index');
+
+    Route::prefix('payment')->name('payment.')->group(function() {
+
+        Route::post('/store/{client}',[App\Http\Controllers\AdminController::class,'store'])->name('store');
+    });
+});
+
+// Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])->name('admin');
+
+// Route::post('/store', [App\Http\Controllers\AdminController::class, 'store'])->name('store');
 
 // QUICKPAY API
 

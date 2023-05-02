@@ -122,7 +122,7 @@ class pensopayController extends Controller
             ],
         ];
 
-		$order_id = intval($client->client_info->invoice_no);
+		$order_id = '688569';
         $facilitator = 'creditcard';
         $amount = intval($client->client_info->orig_amount);
         $currency = $client->client_info->currency;

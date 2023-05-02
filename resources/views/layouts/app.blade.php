@@ -100,7 +100,7 @@
             },
             success: function(data) {
                console.log(data);
-               window.open("path/to/"+data, "_blank");
+               window.open("pdf/"+data, "_blank");
             },
             error: function(response) {
                     alert('error');
