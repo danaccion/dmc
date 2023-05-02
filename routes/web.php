@@ -31,7 +31,8 @@ Route::middleware('auth')->prefix('client')->name('client.')->group(function () 
 
     });
 });
-Route::get('/admin', [App\Http\Controllers\HomeController::class, 'index'])->name('admin');
+
+Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])->name('admin');
 
 // QUICKPAY API
 
@@ -66,5 +67,5 @@ Route::get('/pensopayForm', [App\Http\Controllers\pensopayController::class, 'pe
 
 // PENSOPAY API
 Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
-Route::delete('/clients/{id}', [App\Http\Controllers\HomeController::class, 'delete'])->name('clients.delete');
-Route::get('/clients/search', [HomeController::class, 'search'])->name('clients.search');
+Route::delete('/clients/{id}', [App\Http\Controllers\AdminController::class, 'delete'])->name('clients.delete');
+Route::get('/clients/search', [AdminController::class, 'search'])->name('clients.search');

@@ -24,7 +24,8 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $clients = Client::all(); // retrieve all clients from the database
+        $clients = Client::where('status','on')->orderby('name','asc')->paginate(10); // retrieve all clients from the database
+
 
         return view('admin', compact('clients'));
     }
