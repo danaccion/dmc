@@ -26,6 +26,7 @@ class AdminController extends Controller
     {
         $clients = Client::where('status','on')->orderby('name','asc')->paginate(10); // retrieve all clients from the database
 
+
         return view('admin', compact('clients'));
     }
 
