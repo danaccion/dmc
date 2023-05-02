@@ -12,6 +12,7 @@
                 <button style="margin-top:10px;" type="submit" class="btn btn-primary">Search</button>
             </form>
             <hr>
+
             <form action="{{ route('clients.delete', ['2']) }}" method="POST">
                 @csrf
                 @csrf
