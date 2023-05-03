@@ -86,7 +86,13 @@ class AdminController extends Controller
     {
         $clients = Client::where('status','on')->orderby('name','asc')->paginate(10); // retrieve all clients from the database
 
+        $query = $request->input('query');
 
+        $clients2 = Client::where('name', 'like', '%' . $query . '%')
+                         ->orWhere('email', 'like', '%' . $query . '%')
+                         ->get();
+
+       
         return view('admin', compact('clients'));
     }
 
@@ -94,11 +100,13 @@ class AdminController extends Controller
     {
         $query = $request->input('query');
 
-        $clients = Client::where('name', 'LIKE', "%$query%")
-                    ->orWhere('email', 'LIKE', "%$query%")
-                    ->get();
+        $clients = Client::where('name', 'like', '%' . $query . '%')
+                         ->orWhere('email', 'like', '%' . $query . '%')
+                         ->get();
 
-        return view('home', compact('clients'));
+        return view('clients.search_results', [
+            'clients' => $clients,
+        ]);
     }
 
     public function delete($id)
