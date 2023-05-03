@@ -1,17 +1,51 @@
 @extends('layouts.app')
 
 @section('content')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script>
+                    $(document).ready(function () {
+                        $('#search').on('keyup', function () {
+                            var query = $(this).val();
+                            $.ajax({
+                                url: "{{ route('clients.search') }}",
+                                method: 'GET',
+                                data: {query: query},
+                                success: function (data) {
+                                    $('#results').html(data);
+                                }
+                            });
+                        });
+                    });
+                </script>
 <div class="container">
     <div class="row">
         <div class="col-md-4" style="border-right: 0.5px solid grey; padding-left: 10px; font: size 15px;">
-            <h1>Clients</h1>
+          <!--  <h1>Clients</h1>
             <form action="{{ route('clients.search') }}" method="GET">
                 <div class="form-group">
                     <input type="text" class="form-control" name="query" placeholder="Search clients...">
                 </div>
                 <button style="margin-top:10px;" type="submit" class="btn btn-primary">Search</button>
             </form>
-            <hr>
+            <hr>-->
+
+                <div>
+                    <label for="search">Search clients:</label>
+                    <input type="text" id="search" name="search" autocomplete="off">
+                </div>
+                <div id="results"></div>
+
+                
+
+            @if (count($clients) > 0)
+                <ul>
+                    @foreach ($clients as $client)
+                        <li>{{ $client->name }} ({{ $client->email }})</li>
+                    @endforeach
+                </ul>
+            @else
+                <p>No results found.</p>
+            @endif
 
             <form action="{{ route('clients.delete', ['2']) }}" method="POST">
                 @csrf
