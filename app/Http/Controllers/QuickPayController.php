@@ -144,7 +144,7 @@ class QuickPayController extends Controller
                                         $output .= '<td class="text-muted fw-bold">'.$count.'</td>';
                                         $output .= '<td class="text-muted fw-bold">'.$item['id']."</td>";
                                         $output .= '<td>'.$item['metadata']['shopsystem_name'].'</td>';
-                                        $output .= '<td><button id="view" class="btn btn-primary" value="'.$item['order_id'].'">'. $button .' '.$item['order_id'].'</button></td>';
+                                        $output .= '<td><button id="view" class="view btn btn-primary" value="'.$item['order_id'].'">'. $button .' '.$item['order_id'].'</button></td>';
                                         if(!empty($item['operations'])){
                                             $output .= "<td>".$item['currency']." ".$item['operations'][0]['amount']."</td>";
                                             if($item['operations'][0]['qp_status_code'] == 20000)
