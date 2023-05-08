@@ -31,7 +31,7 @@ Route::middleware('auth')->group(function () {
 
 Auth::routes();
 
-Route::middleware('auth')->prefix('client')->name('client.')->group(function () {
+Route::get('/test-user', [ClientController::class, 'index'])->middleware(['auth', 'is-active']);
 
     Route::get('/',[ClientController::class, 'clientIndex'])->name('index');
    
