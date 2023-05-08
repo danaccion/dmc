@@ -38,7 +38,7 @@ class pensopayController extends Controller
         $testmode = true;
         $success_url = route('success');
         $cancel_url = route('cancel');
-        $callback_url = route('callback');
+        $callback_url = route('handleCallback');
         $autocapture = true;
         $data = [
             'order' => $order,

@@ -17,6 +17,7 @@ return new class extends Migration
         Schema::create('orderidgenerator', function (Blueprint $table) {
             $table->id();
             $table->integer('client_id')->nullable(false);
+            $table->text('status')->nullable(false);
             $table->timestamps();
         });
     }
