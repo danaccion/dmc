@@ -95,7 +95,6 @@ class QuickPayController extends Controller
             $array = $responseData;
             $jsonData = json_decode($array);
             $link = $jsonData->url;
-            dd($link);
             return redirect($jsonData->url);
         }
         return $jsonData->url;
@@ -115,7 +114,6 @@ class QuickPayController extends Controller
         if ($checksum == $checksum2) {
             // Request is authenticated
             // Your code here
-            $code = 200;
             $message = 'Authenticated';
 
             // Parse the request body as JSON
@@ -134,7 +132,6 @@ class QuickPayController extends Controller
                 'status_message' => 'OK'
             ];
         } else {
-            $code = 401;
             $message = 'NOT authenticated';
                // Parse the request body as JSON
             $data = json_decode($request_body, true);

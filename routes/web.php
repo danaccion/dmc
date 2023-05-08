@@ -20,6 +20,14 @@ Route::get('/', function () {
     return view('auth/login');
 });
 
+Route::middleware('auth')->group(function () {
+    // Admin dashboard route
+    Route::middleware('can:isAdmin')->group(function () {
+        Route::get('/home', [App\Http\Controllers\AdminController::class, 'adminIndex'])->name('admin.index');
+    });
+    Route::get('/client',[ClientController::class, 'clientIndex'])->name('index');
+});
+
 Auth::routes();
 
 Route::middleware('auth')->prefix('client')->name('client.')->group(function () {
@@ -33,18 +41,18 @@ Route::middleware('auth')->prefix('client')->name('client.')->group(function () 
     });
 });
 
-Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
+Route::middleware('auth', 'can:isAdmin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/',[App\Http\Controllers\AdminController::class, 'adminIndex'])->name('index');
 
     Route::prefix('payment')->name('payment.')->group(function() {
-
         Route::post('/store/{client}',[App\Http\Controllers\AdminController::class,'store'])->name('store');
     });
 });
 
-Route::get('/history', [App\Http\Controllers\QuickPayController::class, 'getHistory'])->name('/history');
 
+Route::get('/history', [App\Http\Controllers\QuickPayController::class, 'getHistory'])->name('/history');
+    
 
 // QUICKPAY API
 Route::post('/handleCallback', [App\Http\Controllers\QuickPayController::class, 'handleCallback'])->name('handleCallback');
@@ -74,10 +82,11 @@ Route::get('/cancel', [App\Http\Controllers\pensopayController::class, 'getCance
 
 Route::resource('pensopay', App\Http\Controllers\pensopayController::class);
 
-
 Route::get('/pensopayForm', [App\Http\Controllers\pensopayController::class, 'pensopayForm'])->name('pensopayForm');
 
 // PENSOPAY API
 Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
 Route::delete('/clients/{id}', [App\Http\Controllers\AdminController::class, 'delete'])->name('clients.delete');
 Route::get('/clients/search', [AdminController::class, 'search'])->name('clients.search');
+
+Auth::routes();
