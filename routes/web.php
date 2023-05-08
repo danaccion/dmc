@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ClientInfoController;
 use App\Http\Controllers\pensopayController;
 use App\Http\Controllers\QuickPayController;
 
@@ -33,7 +34,13 @@ Auth::routes();
 Route::middleware('auth')->prefix('client')->name('client.')->group(function () {
 
     Route::get('/',[ClientController::class, 'clientIndex'])->name('index');
+   
+    Route::prefix('list')->name('list.')->group(function() {
 
+        Route::get('/table',[ClientInfoController::class, 'getAllClientInfo'])->name('index');
+
+    });
+    
     Route::prefix('payment')->name('payment.')->group(function() {
 
         Route::post('/pensopay/{client}',[QuickPayController::class,'pensopay'])->name('pensopay');
