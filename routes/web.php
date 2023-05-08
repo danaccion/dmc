@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\pensopayController;
+use App\Http\Controllers\QuickPayController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,7 +28,7 @@ Route::middleware('auth')->prefix('client')->name('client.')->group(function () 
 
     Route::prefix('payment')->name('payment.')->group(function() {
 
-        Route::post('/pensopay/{client}',[pensopayController::class,'pensopay'])->name('pensopay');
+        Route::post('/pensopay/{client}',[QuickPayController::class,'pensopay'])->name('pensopay');
 
     });
 });
@@ -46,6 +47,7 @@ Route::get('/history', [App\Http\Controllers\QuickPayController::class, 'getHist
 
 
 // QUICKPAY API
+Route::post('/handleCallback', [App\Http\Controllers\QuickPayController::class, 'handleCallback'])->name('handleCallback');
 
 Route::get('/quickPayTable', [App\Http\Controllers\QuickPayController::class, 'quickPayTable'])->name('quickPayTable');
 
@@ -65,11 +67,10 @@ Route::get('/pay', [App\Http\Controllers\QuickPayController::class, 'pay'])->nam
 
 // PENSOPAY API
 
+
 Route::get('/success', [App\Http\Controllers\pensopayController::class, 'getSuccess'])->name('success');
 
 Route::get('/cancel', [App\Http\Controllers\pensopayController::class, 'getCancel'])->name('cancel');
-
-Route::post('/callback', [App\Http\Controllers\pensopayController::class, 'getCallback'])->name('callback');
 
 Route::resource('pensopay', App\Http\Controllers\pensopayController::class);
 

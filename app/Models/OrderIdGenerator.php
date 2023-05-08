@@ -9,5 +9,5 @@ class OrderIdGenerator extends Model
 {
     use HasFactory;
     protected $table = 'orderidgenerator';
-    protected $fillable = ['client_id'];
+    protected $fillable = ['client_id','status'];
 }
