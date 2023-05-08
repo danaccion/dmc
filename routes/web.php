@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ClientInfoController;
 use App\Http\Controllers\pensopayController;
+use App\Http\Controllers\QuickPayController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,16 +18,53 @@ use App\Http\Controllers\pensopayController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth/login');
+});
+
+Route::middleware('auth')->group(function () {
+    // Admin dashboard route
+    Route::middleware('can:isAdmin')->group(function () {
+        Route::get('/home', [App\Http\Controllers\AdminController::class, 'adminIndex'])->name('admin.index');
+    });
+    Route::get('/client',[ClientController::class, 'clientIndex'])->name('index');
 });
 
 Auth::routes();
 
 Route::get('/test-user', [ClientController::class, 'index'])->middleware(['auth', 'is-active']);
 
-Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'] )->name('admin');
+    Route::get('/',[ClientController::class, 'clientIndex'])->name('index');
+   
+    Route::prefix('list')->name('list.')->group(function() {
+
+        Route::get('/table',[ClientInfoController::class, 'getAllClientInfo'])->name('index');
+
+    });
+    
+    Route::prefix('payment')->name('payment.')->group(function() {
+
+        Route::post('/pensopay/{client}',[QuickPayController::class,'pensopay'])->name('pensopay');
+
+    });
+});
+
+
+Route::middleware('auth', 'can:isAdmin')->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/',[App\Http\Controllers\AdminController::class, 'adminIndex'])->name('index');
+
+    Route::prefix('payment')->name('payment.')->group(function() {
+        Route::post('/store/{client}',[App\Http\Controllers\AdminController::class,'store'])->name('store');
+    });
+});
+
+
+Route::get('/history', [App\Http\Controllers\QuickPayController::class, 'getHistory'])->name('/history');
+    
 
 // QUICKPAY API
+Route::post('/handleCallback', [App\Http\Controllers\QuickPayController::class, 'handleCallback'])->name('handleCallback');
+
+Route::get('/quickPayTable', [App\Http\Controllers\QuickPayController::class, 'quickPayTable'])->name('quickPayTable');
 
 Route::get('/getAllPayment', [App\Http\Controllers\QuickPayController::class, 'getAllPayment'])->name('getAllPayment');
 
@@ -33,7 +72,9 @@ Route::get('/getAllPaymentByOrderId', [App\Http\Controllers\QuickPayController::
 
 Route::get('/deletePaymentById', [App\Http\Controllers\QuickPayController::class, 'deletePaymentById'])->name('/deletePaymentById');
 
-Route::get('/getHistory', [App\Http\Controllers\QuickPayController::class, 'getHistory'])->name('/getHistory');
+Route::get('/history', [App\Http\Controllers\QuickPayController::class, 'getHistory'])->name('/getHistory');
+
+Route::get('/getInvoice', [App\Http\Controllers\QuickPayController::class, 'getInvoice'])->name('/getInvoice');
 
 Route::get('/pay', [App\Http\Controllers\QuickPayController::class, 'pay'])->name('pay');
 
@@ -41,14 +82,12 @@ Route::get('/pay', [App\Http\Controllers\QuickPayController::class, 'pay'])->nam
 
 // PENSOPAY API
 
+
 Route::get('/success', [App\Http\Controllers\pensopayController::class, 'getSuccess'])->name('success');
 
 Route::get('/cancel', [App\Http\Controllers\pensopayController::class, 'getCancel'])->name('cancel');
 
-Route::post('/callback', [App\Http\Controllers\pensopayController::class, 'getCallback'])->name('callback');
-
 Route::resource('pensopay', App\Http\Controllers\pensopayController::class);
-
 
 Route::get('/pensopayForm', [App\Http\Controllers\pensopayController::class, 'pensopayForm'])->name('pensopayForm');
 
@@ -56,3 +95,5 @@ Route::get('/pensopayForm', [App\Http\Controllers\pensopayController::class, 'pe
 Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
 Route::delete('/clients/{id}', [App\Http\Controllers\AdminController::class, 'delete'])->name('clients.delete');
 Route::get('/clients/search', [AdminController::class, 'search'])->name('clients.search');
+
+Auth::routes();

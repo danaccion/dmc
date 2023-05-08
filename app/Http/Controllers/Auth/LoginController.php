@@ -8,25 +8,21 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
     use AuthenticatesUsers;
 
     /**
-     * Where to redirect users after login.
+     * Redirect users after login based on their role.
      *
-     * @var string
+     * @return string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    public function redirectTo()
+    {
+        if (auth()->user()->is_admin) {
+            return route('admin.index');
+        } else {
+            return route('client.index');
+        }
+    }
 
     /**
      * Create a new controller instance.
@@ -38,3 +34,4 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 }
+

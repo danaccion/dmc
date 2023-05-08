@@ -3,106 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\OrderIdGenerator;
 use Illuminate\Http\Request;
 
 class pensopayController extends Controller
 {
-    public function post(Request $request)
-    {
-        $order = [
-            'billing_address' => [
-                'name' => 'Firstname Lastname',
-                'address' => 'Søndergade 23b, 2.t.v.',
-                'zipcode' => '7100',
-                'city' => 'Vejle',
-                'country' => 'DNK',
-                'email' => 'support@pensopay.com',
-                'phone_number' => '77344388',
-                'mobile_number' => '77344388'
-            ],
-            'shipping_address' => [
-                'name' => 'Firstname Lastname',
-                'address' => 'Søndergade 23b, 2.t.v.',
-                'zipcode' => '7100',
-                'city' => 'Vejle',
-                'country' => 'DNK',
-                'email' => 'support@pensopay.com',
-                'phone_number' => '77344388',
-                'mobile_number' => '77344388'
-            ],
-            'basket' => [
-                0 => [
-                    'qty' => 1,
-                    'sku' => 'item-sku',
-                    'vat' => 0.25,
-                    'name' => 'My awesome item',
-                    'price' => 500
-                ],
-                'qty' => 20,
-                'name' => 'Warren Arendain',
-                'vat' => 212071.6,
-                'sku' => 'omnis',
-                'price' => 11
-            ],
-            'shipping' => [
-                'amount' => 4900,
-                'method' => 'own_delivery',
-                'company' => 'My shipping company',
-                'vat_rate' => 0.25
-            ]
-        ];
-
-        $order_id = '1234';
-        $facilitator = 'creditcard';
-        $amount = 500;
-        $currency = 'DKK';
-        $testmode = true;
-        $success_url = 'https://www.google.com/search?q=success';
-        $cancel_url = 'https://www.google.com/search?q=cancel';
-        $callback_url = 'https://www.google.com/search?q=callback';
-        $autocapture = false;
-
-        $data = [
-            'order' => $order,
-            'order_id' => $order_id,
-            'facilitator' => $facilitator,
-            'amount' => $amount,
-            'currency' => $currency,
-            'testmode' => $testmode,
-            'success_url' => $success_url,
-            'cancel_url' => $cancel_url,
-            'callback_url' => $callback_url,
-            'autocapture' => $autocapture
-        ];
-
-        $data_string = json_encode($data);
-
-        // Generated @ codebeautify.org
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, 'https://api.pensopay.com/v1/payments');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-
-        $headers = array();
-        $headers[] = 'Accept: application/json';
-        $headers[] = 'Authorization: Bearer 2e94879f5a767043f0cdb4d5225db5a628efb50f88183956be6a4909f86fc927';
-        $headers[] = 'Content-Type: application/json';
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-        $result = curl_exec($ch);
-        $data = json_decode($result, true);
-        foreach ($data['Results'] as $result) {
-                echo $result['link'];
-                header("Location: ".$result['link']);
-        };
-
-        if (curl_errno($ch)) {
-            echo 'Error:' . curl_error($ch);
-        }
-        curl_close($ch);
-    }
 
     public function pensopay(Client $client, Request $request)
     {
@@ -122,14 +27,18 @@ class pensopayController extends Controller
             ],
         ];
 
-		$order_id = intval($client->client_info->invoice_no);
+        $order_id = $this->encrypt(optional($client->oGenerator)->id,'secretkey');
+      
+        $request->merge(['client_id' => $client->id]);
+        OrderIdGenerator::create($request->all());
+
         $facilitator = 'creditcard';
         $amount = intval($client->client_info->orig_amount);
         $currency = $client->client_info->currency;
         $testmode = true;
         $success_url = route('success');
         $cancel_url = route('cancel');
-        $callback_url = route('callback');
+        $callback_url = route('handleCallback');
         $autocapture = true;
         $data = [
             'order' => $order,
@@ -166,11 +75,50 @@ class pensopayController extends Controller
             echo 'Error:' . curl_error($ch);
         }
         // print_r($result);
-        // echo $data['link'];
+        if(!isset($data['link'])){
+            $order_id = $this->encrypt(optional($client->oGenerator)->id,'secretkey');
+            $request->merge(['client_id' => $client->id]);
+            OrderIdGenerator::create($request->all());
+        };
         header('Location: '.$data['link']);
-        // curl_close($ch);
+        curl_close($ch);
         exit;
     }
+
+    function encrypt($value, $key) {
+        // Convert the value to a string and add padding if necessary
+        $padded = str_pad((string) $value, 6, '0', STR_PAD_LEFT);
+        
+        // Apply XOR encryption to the digits using the secret key
+        $encrypted = '';
+        for ($i = 0; $i < 6; $i++) {
+            $encrypted .= chr(ord($padded[$i]) ^ ord($key[$i % strlen($key)]));
+        }
+        
+        // Convert the resulting string to an integer
+        $result = intval(bin2hex($encrypted), 16);
+        
+        return $result;
+    }
+    
+    function decrypt($encrypted, $key) {
+        // Convert the encrypted integer to a binary string
+        $hex = dechex($encrypted);
+        $hex_padded = str_pad($hex, 12, '0', STR_PAD_LEFT);
+        $binary = hex2bin($hex_padded);
+        
+        // Apply XOR decryption to the bytes using the secret key
+        $decrypted = '';
+        for ($i = 0; $i < 6; $i++) {
+            $decrypted .= chr(ord($binary[$i]) ^ ord($key[$i % strlen($key)]));
+        }
+        
+        // Convert the resulting string to an integer
+        $result = intval($decrypted);
+        
+        return $result;
+    }
+    
 
     function sign($params, $api_key) {
         $flattened_params = $this->flatten_params($params);

@@ -19,5 +19,7 @@ class ClientInfo extends Model
         'orig_amount',
         'amount',
         'status',
+        'created_at',
+        'updated_at'
     ];
 }

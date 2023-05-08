@@ -16,6 +16,12 @@ class Client extends Model
     {
         return $this->hasMany(Order::class);
     }
+
+    public function oGenerator()
+    {
+        return $this->hasOne(OrderIdGenerator::class,'client_id', 'id')->latestOfMany();
+    }
+    
     public function client_info()
     {
         return $this->belongsTo(ClientInfo::class,'id','client_id');
