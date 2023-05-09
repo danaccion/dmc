@@ -160,15 +160,12 @@ class QuickPayController extends Controller
             // Now you can access the code and message like this:
             $code = $response_array['code'];
             $message = $response_array['message'];
-
-            // OrderIdGenerator::where('id', $order_id)->update(['status' => $message]);
             $order = OrderIdGenerator::where('id', $order_id)->first();
             $order->status = $message;
             $order->save();
-            
+            $message = $code == null? 'Un-Paid' : $message ;
             $clientInfoIds = ClientInfo::where('client_id', $order->client_id)
             ->update(['status' => $message]);
-
             return $response;
         } else {
             // Request is NOT authenticated
