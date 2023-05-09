@@ -156,18 +156,4 @@ class pensopayController extends Controller
           $params["checksum"] = $this->sign($params, "ed93f788f699c42aefa8a6713794b4d347ff493ecce1aca660581fb1511a1816");
     }
 
-    public function getSuccess(Request $request)
-    {
-        return view('pensopay.success');
-    }
-
-    public function getCancel(Request $request)
-    {
-        return view('pensopay.cancel');
-    }
-
-    public function getCallback(Request $request)
-    {
-        return view('pensopay.callback');
-    }
 }

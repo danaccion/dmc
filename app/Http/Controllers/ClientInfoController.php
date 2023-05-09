@@ -14,7 +14,7 @@ class ClientInfoController extends Controller
         $output = '<table class="table table-hover mb-2">
                         <tr>
                             <th>No.</th>
-                            <th>Payment id</th>
+                            <th>Client id</th>
                             <th>Invoice No</th>
                             <th>Status</th>
                             <th>Date Paid</th>
@@ -39,5 +39,45 @@ class ClientInfoController extends Controller
         return view('clients.table', ['cif_table' => $output]);
     }
     
+    public function getSuccess(Request $request)
+    {
+        $output = $this->getClientInfo($request->id);
+        return view('pensopay.success', ['cif_table' => $output]);
+    }
+
+    public function getCancel(Request $request)
+    {
+        $output = $this->getClientInfo($request->id);
+        return view('pensopay.cancel' );
+    }
     
+    public function getClientInfo($id)
+    {
+        $cif = ClientInfo::where('id', $id)->get();
+        $count = 0;
+        $output = '<table class="table table-hover mb-2">
+                        <tr>
+                            <th>No.</th>
+                            <th>Client id</th>
+                            <th>Invoice No</th>
+                            <th>Status</th>
+                            <th>Date Paid</th>
+                        </tr>';
+    
+        $button = '<i class="bi bi-eye-fill"></i>';
+        foreach ($cif as $item) {
+            $count++;
+            $output .= "<tr>";
+            $output .= "<td class='text-muted fw-bold'>" . $count . "</td>";
+            $output .= "<td class='text-muted fw-bold'>" . $item->id . "</td>";
+            $output .= '<td><button id="view" class="view btn btn-primary" value="' . $item->invoice_no . '">' . $button . ' ' . $item->invoice_no . '</button></td>';
+            $output .= "<td class='text-muted fw-bold'>" . $item->status . "</td>";
+            $output .= "<td class='text-muted fw-bold'>" . $item->updated_at . "</td>";
+            $output .= "</tr>";
+        }
+    
+        $output .= '</table>';
+        return $output;
+
+    }
 }
