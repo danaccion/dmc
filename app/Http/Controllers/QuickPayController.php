@@ -24,6 +24,29 @@ class QuickPayController extends Controller
         return strval($encrypted_num);
     }
 
+    function get_error_message($status) {
+        $error_messages = [
+            400 => 'Invalid authentication credentials',
+            401 => 'Unauthorized',
+            403 => 'Forbidden',
+            404 => 'Not Found',
+            500 => 'Internal Server Error',
+            // add more error messages as needed
+        ];
+        
+        if (array_key_exists($status, $error_messages)) {
+            return [
+                'status_code' => $status,
+                'status_message' => $error_messages[$status]
+            ];
+        } else {
+            return [
+                'status_code' => $status,
+                'status_message' => 'Unknown error'
+            ];
+        }
+    }
+
     public function pensopay(Client $client, Request $request)
     {
         if(empty($request->conditions))
@@ -32,12 +55,10 @@ class QuickPayController extends Controller
         }
         $client->load('client_info');
         try {
-            $api_key = '86f281fd65f00d33e5712587379532aeb283049735c209d2ded8f645b9a18dd2';
+            $api_key = 'c131a294f2a44ff648ade3941195fcda6a83c2b579e788ac16327b8701735c1b';
             $client_Quikpay = new QuickPay(":{$api_key}");
-            // Create payment
-            // IINIT
             $request->merge(['client_id' => $client->id]);
-            $request->merge(['status' => 'Un-Paid']);
+            $request->merge(['status' => 'Initial']);
             OrderIdGenerator::create($request->all());
             
             $order_id='';
@@ -45,10 +66,10 @@ class QuickPayController extends Controller
 
             $facilitator = 'creditcard';
             $amount = intval($client->client_info->orig_amount);
-            $currency = 'DKK';
+            $currency = $client->client_info->currency;
             $testmode = true;
             $autocapture = true;
-            $merchant_id = '171565';
+            $merchant_id = '150863';
 
             $initform = array(
                 'order_id' => $order_id,
@@ -66,7 +87,19 @@ class QuickPayController extends Controller
                     $jsonData = json_decode($array);
                     $id = $jsonData->id;
                     // Authorized
-                    $this->putPayment($id, $client_Quikpay, $amount, $merchant_id);
+                    $url = $this->putPayment($id, $client_Quikpay, $amount, $merchant_id);
+                    header('Location:'. $url);
+                    exit;
+                }
+                else{
+                    $status_code = $status;
+                    $error_message = $this->get_error_message($status_code);
+                    $json_response = json_encode($error_message);
+                    // Set the content type to JSON
+                    header('Content-Type: application/json');
+
+                    // Output the JSON response
+                    echo $json_response;
                 }
             } catch (Exception $e) {
                 echo $e;
@@ -95,65 +128,115 @@ class QuickPayController extends Controller
             $array = $responseData;
             $jsonData = json_decode($array);
             $link = $jsonData->url;
-            return redirect($jsonData->url);
         }
         return $jsonData->url;
     }
 
     public function handleCallback(Request $request)
     {
-
         // Get the request body
         $request_body = $request->getContent();
+    
         // Calculate the checksum
-        $private_key = "86f281fd65f00d33e5712587379532aeb283049735c209d2ded8f645b9a18dd2";
+        $private_key = "1b60098eb5156bf920f0b37138198c20b9fd9e1fc7270b678c530c5870394134";
         $checksum = $this->sign($request_body, $private_key);
-        $checksum2 =$this->sign($request_body, $request->header('QuickPay-Checksum-Sha256')); 
-
+    
         // Check if the request is authenticated
-        if ($checksum == $checksum2) {
+        $is_authenticated = ($checksum == $request->header('QuickPay-Checksum-Sha256'));
+    
+        // Parse the request body as JSON
+        $data = json_decode($request_body, true);
+    
+        // Get the order_id from the JSON data
+        $order_id = $this->decrypt($data['order_id']);
+    
+        if ($is_authenticated) {
             // Request is authenticated
-            // Your code here
-            $message = 'Authenticated';
+            // Check if the operation status is approved
+            $response = $this->getQuickPayStatus($data['operations'][0]['qp_status_code']);
 
-            // Parse the request body as JSON
-            $data = json_decode($request_body, true);
+            $response_array = json_decode($response, true);
 
-            // Get the order_id from the JSON data
-            $order_id = $data['order_id'];
+            // Now you can access the code and message like this:
+            $code = $response_array['code'];
+            $message = $response_array['message'];
+           
+            $clientInfoIds = ClientInfo::where('client_id', $order_id)
+                ->update(['status' => $message]);
 
-            $order_id = $this->decrypt($order_id);
-            // $clientInfoIds = ClientInfo::where('client_id', $order_id)
-            //     ->update(['status' => 'Paid']);
-            OrderIdGenerator::where('id', $order_id)
-                ->update(['status' => 'Paid']);
-            $data = [
-                'status_code' => 200,
-                'status_message' => 'OK'
-            ];
+            OrderIdGenerator::where('id', $order_id)->update(['status' => $message]);
+            return $response;
         } else {
-            $message = 'NOT authenticated';
-               // Parse the request body as JSON
-            $data = json_decode($request_body, true);
-
-            // Get the order_id from the JSON data
-            $order_id = $data['order_id'];
-
-            $order_id = $this->decrypt($order_id);
-            
-            $clientInfoIds = ClientInfo::where('id', $order_id)
-            ->update(['status' => 'Failed']);
             // Request is NOT authenticated
-            // Your code here
-            $data = [
-                'status_code' => 401,
-                'status_message' => 'NOT AUTHENTICATED'
-            ];
+            // Update the order status to Failed
+            OrderIdGenerator::where('id', $order_id)->update(['status' => 'Failed']);
+            $status_code = 401;
+            $status_message = 'NOT AUTHENTICATED';
         }
     
-        return response()->json($data);
+        // Prepare the response data
+        $response_data = [
+            'status_code' => $status_code,
+            'status_message' => $status_message
+        ];
+    
+        // Return the response as JSON
+        return response()->json($response_data);
     }
     
+    function getQuickPayStatus($code) {
+        $status_codes = array(
+            20000 => "Approved",
+            40000 => "Rejected by acquirer",
+            40001 => "Request declined by acquirer",
+            40002 => "Referral to acquirer",
+            40003 => "Rejected due to risk",
+            40004 => "Rejected due to anti-fraud",
+            40005 => "Expired card",
+            40006 => "Insufficient funds",
+            40007 => "Card blocked",
+            40008 => "Card lost or stolen",
+            40009 => "Card has been restricted by the issuer",
+            40010 => "Invalid card number",
+            40011 => "Invalid card expiry date",
+            40012 => "Invalid card security code",
+            40013 => "Invalid card type",
+            40014 => "Card blacklisted",
+            40015 => "Invalid authentication",
+            40016 => "Acquirer communication error",
+            40017 => "Transaction timeout",
+            40018 => "Request not allowed",
+            40019 => "Request not supported",
+            40020 => "Request not valid",
+            40021 => "Transaction already refunded",
+            40022 => "Request partially refunded",
+            40023 => "Request refunded",
+            40024 => "Request partially captured",
+            40025 => "Request captured",
+            40026 => "Request partially reversed",
+            40027 => "Request reversed",
+            40028 => "Request already reversed",
+            40029 => "Request already settled",
+            40030 => "Request partially settled",
+            40031 => "Request settled",
+            40032 => "Request already cancelled",
+            40033 => "Request cancelled",
+            40034 => "Request already updated",
+            40035 => "Request updated",
+            40036 => "Request already processed",
+            40037 => "Request processed",
+            40038 => "Request pending",
+            40039 => "Request expired"
+        );
+    
+        if (array_key_exists($code, $status_codes)) {
+            return json_encode(array("code" => $code, "message" => $status_codes[$code]));
+        } else {
+            return json_encode(array("code" => null, "message" => "Invalid status code"));
+        }
+    }
+    
+
 
     private function sign($base, $private_key)
     {
@@ -368,76 +451,7 @@ class QuickPayController extends Controller
             }
     }
 
-    public function pay(){
 
-        try {
-            $api_key = '86f281fd65f00d33e5712587379532aeb283049735c209d2ded8f645b9a18dd2';
-            $client = new QuickPay(":{$api_key}");
-            // Create payment
-            $order_id='';
-            $random_number = mt_rand(100000, 999999);
-            $order_id .= $random_number;
-            $facilitator = 'creditcard';
-            $amount = 500;
-            $currency = 'DKK';
-            $testmode = true;
-            $autocapture = true;
-
-            $initform = array(
-                'order_id' => $order_id,
-                'currency' => $currency,
-                'street'=>'dan',
-                'city'=>'company name',
-                'zip_code' =>'8000',
-                'country_code' => 'PH',
-                'email' =>'d@mail.com'
-                
-            );
-                $payments = $client->request->post('/payments', $initform);
-                $status = $payments->httpStatus();
-                if ($status == 201) {
-                    $jsonObj = json_encode($payments);
-                    $responseData = json_decode($jsonObj);
-                    $responseData = $responseData->response_data;
-                    $array = $responseData;
-                    $jsonData = json_decode($array);
-                    $id = $jsonData->id;
-                    // Authorized
-                    $this->putPayment($id, $client);
-                }
-            } catch (Exception $e) {
-                echo $e;
-            }
-   
-    }
-
-    // public function putPayment($id, $client)
-    // {
-    //      $form = array(
-    //         'id'=>$id,
-    //         'amount' => 1,
-    //         "merchant_id" => 171565,
-    //         "payment_methods" => "creditcard",
-    //         "auto_capture" => true,
-    //         "continue_url" => route('success'),
-    //         "cancel_url" =>  route('cancel'),
-    //         "callback_url" => route('handleCallback')
-    //      );
-    //     $url = '/payments/'.$id.'/link';
-    //     $payments =  $client->request->put($url, $form);
-    //     $status = $payments->httpStatus();
-    //     if($status == 200){
-    //         $jsonObj = json_encode($payments);
-    //         $responseData = json_decode($jsonObj);
-    //         $responseData = $responseData->response_data;
-    //         $array = $responseData;
-    //         $jsonData = json_decode($array);
-    //         $link = $jsonData->url;
-    //         echo $link;
-    //         header('Location:'.$link);
-    //         exit();
-    //     }
-    // }
 
     public function getSuccess(Request $request)
     {
