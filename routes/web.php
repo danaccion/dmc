@@ -83,9 +83,9 @@ Route::get('/pay', [App\Http\Controllers\QuickPayController::class, 'pay'])->nam
 // PENSOPAY API
 
 
-Route::get('/success', [App\Http\Controllers\pensopayController::class, 'getSuccess'])->name('success');
+Route::get('success/{id}', [App\Http\Controllers\ClientInfoController::class, 'getSuccess'])->name('success');
 
-Route::get('/cancel', [App\Http\Controllers\pensopayController::class, 'getCancel'])->name('cancel');
+Route::get('/cancel', [App\Http\Controllers\ClientInfoController::class, 'getCancel'])->name('cancel');
 
 Route::resource('pensopay', App\Http\Controllers\pensopayController::class);
 

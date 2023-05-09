@@ -55,7 +55,7 @@ class QuickPayController extends Controller
         }
         $client->load('client_info');
         try {
-            $api_key = 'c131a294f2a44ff648ade3941195fcda6a83c2b579e788ac16327b8701735c1b';
+            $api_key = env('QUICKPAY_API_KEY');
             $client_Quikpay = new QuickPay(":{$api_key}");
             $request->merge(['client_id' => $client->id]);
             $request->merge(['status' => 'Initial']);
@@ -87,7 +87,7 @@ class QuickPayController extends Controller
                     $jsonData = json_decode($array);
                     $id = $jsonData->id;
                     // Authorized
-                    $url = $this->putPayment($id, $client_Quikpay, $amount, $merchant_id);
+                    $url = $this->putPayment($id, $client_Quikpay, $amount, $merchant_id, $client->client_info->id);
                     header('Location:'. $url);
                     exit;
                 }
@@ -106,7 +106,7 @@ class QuickPayController extends Controller
             }
     }
 
-    public function putPayment($id, $client_Quikpay ,$amount, $merchant_id)
+    public function putPayment($id, $client_Quikpay ,$amount, $merchant_id, $client_id)
     {
          $form = array(
             'id'=>$id,
@@ -114,9 +114,9 @@ class QuickPayController extends Controller
             "merchant_id" => $merchant_id,
             "payment_methods" => "creditcard",
             "auto_capture" => true,
-            "continue_url" => route('success'),
-            "cancel_url" =>  route('cancel'),
-            "callback_url" => 'https://stg.dmc-pay.com/handleCallback'
+            "continue_url" => route('success', ['id' => $client_id]),
+            "cancel_url" =>  route('cancel', ['id' => $client_id]),
+            "callback_url" => route('handleCallback')
          );
         $url = '/payments/'.$id.'/link';
         $payments =  $client_Quikpay->request->put($url, $form);
@@ -138,7 +138,7 @@ class QuickPayController extends Controller
         $request_body = $request->getContent();
     
         // Calculate the checksum
-        $private_key = "1b60098eb5156bf920f0b37138198c20b9fd9e1fc7270b678c530c5870394134";
+        $private_key = env('QUICKPAY_PRIVATE_KEY');
         $checksum = $this->sign($request_body, $private_key);
     
         // Check if the request is authenticated
@@ -160,16 +160,23 @@ class QuickPayController extends Controller
             // Now you can access the code and message like this:
             $code = $response_array['code'];
             $message = $response_array['message'];
-           
-            $clientInfoIds = ClientInfo::where('client_id', $order_id)
-                ->update(['status' => $message]);
 
-            OrderIdGenerator::where('id', $order_id)->update(['status' => $message]);
+            // OrderIdGenerator::where('id', $order_id)->update(['status' => $message]);
+            $order = OrderIdGenerator::where('id', $order_id)->first();
+            $order->status = $message;
+            $order->save();
+            
+            $clientInfoIds = ClientInfo::where('client_id', $order->client_id)
+            ->update(['status' => $message]);
+
             return $response;
         } else {
             // Request is NOT authenticated
             // Update the order status to Failed
-            OrderIdGenerator::where('id', $order_id)->update(['status' => 'Failed']);
+            $order = OrderIdGenerator::where('id', $order_id)->first();
+            $order->status = 'Failed';
+            $order->save();
+            
             $status_code = 401;
             $status_message = 'NOT AUTHENTICATED';
         }
@@ -235,8 +242,6 @@ class QuickPayController extends Controller
             return json_encode(array("code" => null, "message" => "Invalid status code"));
         }
     }
-    
-
 
     private function sign($base, $private_key)
     {
@@ -245,7 +250,7 @@ class QuickPayController extends Controller
     
     public function deletePaymentById(Request $request){
         try {
-            $api_key = 'c131a294f2a44ff648ade3941195fcda6a83c2b579e788ac16327b8701735c1b';
+            $api_key = env('QUICKPAY_API_KEY');
             $client = new QuickPay(":{$api_key}");
             $url = "/payments/{$request->id}/link";
             echo $url;
@@ -266,7 +271,7 @@ class QuickPayController extends Controller
     {
         // Get all payments By Order ID
         try {
-            $api_key = 'c131a294f2a44ff648ade3941195fcda6a83c2b579e788ac16327b8701735c1b';
+            $api_key = env('QUICKPAY_API_KEY');
             $client = new QuickPay(":{$api_key}");
             // Create payment
             $payments = $client->request->get('/payments?order_id='.$request->id);
@@ -346,7 +351,7 @@ class QuickPayController extends Controller
     {
         // Get all payments By Order ID
         try {
-            $api_key = '86f281fd65f00d33e5712587379532aeb283049735c209d2ded8f645b9a18dd2';
+            $api_key = env('QUICKPAY_API_KEY');;
             $client = new QuickPay(":{$api_key}");
             // Create payment
             $payments = $client->request->get('/payments');
@@ -429,13 +434,12 @@ class QuickPayController extends Controller
     {
         return view('quickpay.table');
     }
-
     
     public function getAllPayment()
     {
         // Get all payments
         try {
-            $api_key = 'c131a294f2a44ff648ade3941195fcda6a83c2b579e788ac16327b8701735c1b';
+            $api_key = env('QUICKPAY_API_KEY');
             $client = new QuickPay(":{$api_key}");
             // Create payment
             $payments = $client->request->get('/payments');
@@ -450,8 +454,6 @@ class QuickPayController extends Controller
                 echo $e;
             }
     }
-
-
 
     public function getSuccess(Request $request)
     {
