@@ -81,7 +81,7 @@ class AdminController extends Controller
         return view('pensopay.success');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $clients = Client::where('status', 'on')->orderby('name', 'asc')->paginate(10); // retrieve all clients from the database
 
