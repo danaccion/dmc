@@ -10,12 +10,14 @@ class ClientInfoController extends Controller
     //
     public function getAllClientInfo(Request $request)
     {
-        $cif = ClientInfo::paginate(10);
+        $cif = ClientInfo::latest()->paginate(10);
+
 
         $output = '<table class="table table-hover mb-2">
                         <tr>
                             <th>No.</th>
                             <th>Client id</th>
+                            <th>Company Name</th>
                             <th>Invoice No</th>
                             <th>Status</th>
                             <th>Date Paid</th>
@@ -27,7 +29,8 @@ class ClientInfoController extends Controller
             $count++;
             $output .= "<tr>";
             $output .= "<td class='text-muted fw-bold'>" . $count . "</td>";
-            $output .= "<td class='text-muted fw-bold'>" . $item->id . "</td>";
+            $output .= "<td class='text-muted fw-bold'>" . $item->id. "</td>";
+            $output .= "<td class='text-muted fw-bold'>" . optional($item->client)->name . "</td>";
             $output .= '<td><button id="view" class="view btn btn-primary" value="' . $item->invoice_no . '">' . $button . ' ' . $item->invoice_no . '</button></td>';
             $output .= "<td class='text-muted fw-bold'>" . $item->status . "</td>";
             $output .= "<td class='text-muted fw-bold'>" . $item->updated_at . "</td>";

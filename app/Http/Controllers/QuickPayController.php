@@ -80,7 +80,7 @@ class QuickPayController extends Controller
             $initform = array(
                 'order_id' => $order_id,
                 'currency' => $client->client_info->currency,
-                'company_name' => $client->name,
+                'invoice_address[company_name]' => $client->name,
                 'country' => $client->country,
             );
             $payments = $client_Quikpay->request->post('/payments', $initform);
@@ -378,12 +378,19 @@ class QuickPayController extends Controller
                 $count = 0;
                 $button = '<i class="bi bi-eye-fill"> </i>';
                 foreach ($array as $item) {
+
+                    if (isset($item['invoice_address'])) {
+                        $invoiceAddressArray = $item['invoice_address'];
+                        $companyName = $invoiceAddressArray['company_name'];
+                    } else {
+                        $companyName = '';
+                    }
                     $count++;
                     $output .= '<tr>';
                     $output .= '<td class="text-muted fw-bold">' . $count . '</td>';
                     $output .= '<td class="text-muted fw-bold">' . $item['order_id'] . "</td>";
                     $output .= '<td class="text-muted fw-bold">' . $item['id'] . "</td>";
-                    $output .= '<td>' . $item['metadata']['shopsystem_name'] . '</td>';
+                    $output .= '<td>' . $companyName . '</td>';
                     $output .= '<td><button id="view" class="view btn btn-primary" value="' . $item['order_id'] . '">' . $button . ' ' . $item['order_id'] . '</button></td>';
                     if (!empty($item['operations'])) {
                         $output .= "<td>" . $item['currency'] . " " . $item['operations'][0]['amount'] . "</td>";
