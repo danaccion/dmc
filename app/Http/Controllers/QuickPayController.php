@@ -59,6 +59,7 @@ class QuickPayController extends Controller
             $client_Quikpay = new QuickPay(":{$api_key}");
             $request->merge(['client_id' => $client->id]);
             $request->merge(['status' => 'Initial']);
+            $request->merge(['invoice_no' => $client->invoice_no]);
             OrderIdGenerator::create($request->all());
             
             $order_id='';
@@ -69,7 +70,7 @@ class QuickPayController extends Controller
             $currency = $client->client_info->currency;
             $testmode = true;
             $autocapture = true;
-            $merchant_id = '150863';
+            $merchant_id = env('QUICKPAY_MERCHANT_ID');
 
             $initform = array(
                 'order_id' => $order_id,
@@ -165,6 +166,7 @@ class QuickPayController extends Controller
             $order->save();
             $message = $code == null? 'Un-Paid' : $message ;
             $clientInfoIds = ClientInfo::where('client_id', $order->client_id)
+            ->where('invoice_no', $order->invoice_no)
             ->update(['status' => $message]);
             return $response;
         } else {
