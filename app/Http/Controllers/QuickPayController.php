@@ -59,7 +59,7 @@ class QuickPayController extends Controller
             $client_Quikpay = new QuickPay(":{$api_key}");
             $request->merge(['client_id' => $client->id]);
             $request->merge(['status' => 'Initial']);
-            $request->merge(['invoice_no' => $client->invoice_no]);
+            $request->merge(['invoice_no' => $client->client_info->invoice_no]);
             OrderIdGenerator::create($request->all());
             
             $order_id='';

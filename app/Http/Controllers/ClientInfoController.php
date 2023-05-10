@@ -41,8 +41,8 @@ class ClientInfoController extends Controller
     
     public function getSuccess(Request $request)
     {
-        $output = $this->getClientInfo($request->id);
-        return view('pensopay.success', ['cif_table' => $output]);
+        list($output, $status) = $this->getClientInfo($request->id);
+        return view('pensopay.success', ['cif_table' => $output, 'status' => $status]);
     }
 
     public function getCancel(Request $request)
@@ -65,19 +65,21 @@ class ClientInfoController extends Controller
                         </tr>';
     
         $button = '<i class="bi bi-eye-fill"></i>';
+        $status = '';
         foreach ($cif as $item) {
+            $status =  $item->status ;
             $count++;
             $output .= "<tr>";
             $output .= "<td class='text-muted fw-bold'>" . $count . "</td>";
             $output .= "<td class='text-muted fw-bold'>" . $item->id . "</td>";
             $output .= '<td><button id="view" class="view btn btn-primary" value="' . $item->invoice_no . '">' . $button . ' ' . $item->invoice_no . '</button></td>';
-            $output .= "<td class='text-muted fw-bold'>" . $item->status . "</td>";
+            $output .= "<td class='text-muted fw-bold'>" . ucfirst($item->status) . "</td>";
             $output .= "<td class='text-muted fw-bold'>" . $item->updated_at . "</td>";
             $output .= "</tr>";
         }
     
         $output .= '</table>';
-        return $output;
+        return [$output, ucfirst($status)];
 
     }
 }
