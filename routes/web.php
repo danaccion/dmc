@@ -27,6 +27,37 @@ Route::middleware('auth')->group(function () {
         Route::get('/home', [App\Http\Controllers\AdminController::class, 'adminIndex'])->name('admin.index');
     });
     Route::get('/client',[ClientController::class, 'clientIndex'])->name('index');
+    // 
+        
+    Route::get('/history', [App\Http\Controllers\QuickPayController::class, 'getHistory'])->name('/history');
+
+    // QUICKPAY API
+    Route::post('/handleCallback', [App\Http\Controllers\QuickPayController::class, 'handleCallback'])->name('handleCallback');
+
+    Route::get('/quickPayTable', [App\Http\Controllers\QuickPayController::class, 'quickPayTable'])->name('quickPayTable');
+
+    Route::get('/getAllPayment', [App\Http\Controllers\QuickPayController::class, 'getAllPayment'])->name('getAllPayment');
+
+    Route::get('/getAllPaymentByOrderId', [App\Http\Controllers\QuickPayController::class, 'getAllPaymentByOrderId'])->name('/getAllPaymentByOrderId');
+
+    Route::get('/deletePaymentById', [App\Http\Controllers\QuickPayController::class, 'deletePaymentById'])->name('/deletePaymentById');
+
+    Route::get('/history', [App\Http\Controllers\QuickPayController::class, 'getHistory'])->name('/getHistory');
+
+    Route::get('/getInvoice', [App\Http\Controllers\QuickPayController::class, 'getInvoice'])->name('/getInvoice');
+
+    Route::get('/pay', [App\Http\Controllers\QuickPayController::class, 'pay'])->name('pay');
+
+    // QUICKPAY API
+
+    Route::get('success/{id}', [App\Http\Controllers\ClientInfoController::class, 'getSuccess'])->name('success');
+
+    Route::get('/cancel', [App\Http\Controllers\ClientInfoController::class, 'getCancel'])->name('cancel');
+
+    // PENSOPAY API
+    Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
+    Route::delete('/clients/{id}', [App\Http\Controllers\AdminController::class, 'delete'])->name('clients.delete');
+    Route::get('/clients/search', [AdminController::class, 'search'])->name('clients.search');
 });
 
 Auth::routes();
@@ -58,42 +89,3 @@ Route::middleware('auth', 'can:isAdmin')->prefix('admin')->name('admin.')->group
 });
 
 
-Route::get('/history', [App\Http\Controllers\QuickPayController::class, 'getHistory'])->name('/history');
-    
-
-// QUICKPAY API
-Route::post('/handleCallback', [App\Http\Controllers\QuickPayController::class, 'handleCallback'])->name('handleCallback');
-
-Route::get('/quickPayTable', [App\Http\Controllers\QuickPayController::class, 'quickPayTable'])->name('quickPayTable');
-
-Route::get('/getAllPayment', [App\Http\Controllers\QuickPayController::class, 'getAllPayment'])->name('getAllPayment');
-
-Route::get('/getAllPaymentByOrderId', [App\Http\Controllers\QuickPayController::class, 'getAllPaymentByOrderId'])->name('/getAllPaymentByOrderId');
-
-Route::get('/deletePaymentById', [App\Http\Controllers\QuickPayController::class, 'deletePaymentById'])->name('/deletePaymentById');
-
-Route::get('/history', [App\Http\Controllers\QuickPayController::class, 'getHistory'])->name('/getHistory');
-
-Route::get('/getInvoice', [App\Http\Controllers\QuickPayController::class, 'getInvoice'])->name('/getInvoice');
-
-Route::get('/pay', [App\Http\Controllers\QuickPayController::class, 'pay'])->name('pay');
-
-// QUICKPAY API
-
-// PENSOPAY API
-
-
-Route::get('success/{id}', [App\Http\Controllers\ClientInfoController::class, 'getSuccess'])->name('success');
-
-Route::get('/cancel', [App\Http\Controllers\ClientInfoController::class, 'getCancel'])->name('cancel');
-
-Route::resource('pensopay', App\Http\Controllers\pensopayController::class);
-
-Route::get('/pensopayForm', [App\Http\Controllers\pensopayController::class, 'pensopayForm'])->name('pensopayForm');
-
-// PENSOPAY API
-Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
-Route::delete('/clients/{id}', [App\Http\Controllers\AdminController::class, 'delete'])->name('clients.delete');
-Route::get('/clients/search', [AdminController::class, 'search'])->name('clients.search');
-
-Auth::routes();
