@@ -8,9 +8,10 @@ use App\Models\ClientInfo;
 class ClientInfoController extends Controller
 {
     //
-    public function getAllClientInfo(Request $request) {
+    public function getAllClientInfo(Request $request)
+    {
         $cif = ClientInfo::paginate(10);
-    
+
         $output = '<table class="table table-hover mb-2">
                         <tr>
                             <th>No.</th>
@@ -19,7 +20,7 @@ class ClientInfoController extends Controller
                             <th>Status</th>
                             <th>Date Paid</th>
                         </tr>';
-    
+
         $count = ($cif->currentPage() - 1) * $cif->perPage();
         $button = '<i class="bi bi-eye-fill"></i>';
         foreach ($cif as $item) {
@@ -32,13 +33,13 @@ class ClientInfoController extends Controller
             $output .= "<td class='text-muted fw-bold'>" . $item->updated_at . "</td>";
             $output .= "</tr>";
         }
-    
+
         $output .= '</table>';
         $output .= $cif->links();
-    
+
         return view('clients.table', ['cif_table' => $output]);
     }
-    
+
     public function getSuccess(Request $request)
     {
         list($output, $status) = $this->getClientInfo($request->id);
@@ -48,9 +49,9 @@ class ClientInfoController extends Controller
     public function getCancel(Request $request)
     {
         $output = $this->getClientInfo($request->id);
-        return view('pensopay.cancel' );
+        return view('pensopay.cancel');
     }
-    
+
     public function getClientInfo($id)
     {
         $cif = ClientInfo::where('id', $id)->get();
@@ -63,11 +64,11 @@ class ClientInfoController extends Controller
                             <th>Status</th>
                             <th>Date Paid</th>
                         </tr>';
-    
+
         $button = '<i class="bi bi-eye-fill"></i>';
         $status = '';
         foreach ($cif as $item) {
-            $status =  $item->status ;
+            $status = $item->status;
             $count++;
             $output .= "<tr>";
             $output .= "<td class='text-muted fw-bold'>" . $count . "</td>";
@@ -77,7 +78,7 @@ class ClientInfoController extends Controller
             $output .= "<td class='text-muted fw-bold'>" . $item->updated_at . "</td>";
             $output .= "</tr>";
         }
-    
+
         $output .= '</table>';
         return [$output, ucfirst($status)];
 
