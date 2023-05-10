@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ClientInfoController;
-use App\Http\Controllers\pensopayController;
 use App\Http\Controllers\QuickPayController;
 
 /*
@@ -26,9 +25,9 @@ Route::middleware('auth')->group(function () {
     Route::middleware('can:isAdmin')->group(function () {
         Route::get('/home', [App\Http\Controllers\AdminController::class, 'adminIndex'])->name('admin.index');
     });
-    Route::get('/client',[ClientController::class, 'clientIndex'])->name('index');
+    Route::get('/client', [ClientController::class, 'clientIndex'])->name('index');
     // 
-        
+
     Route::get('/history', [App\Http\Controllers\QuickPayController::class, 'getHistory'])->name('/history');
 
     // QUICKPAY API
@@ -64,28 +63,26 @@ Auth::routes();
 
 Route::middleware('auth')->prefix('client')->name('client.')->group(function () {
 
-    Route::get('/',[ClientController::class, 'clientIndex'])->name('index');
-   
-    Route::prefix('list')->name('list.')->group(function() {
+    Route::get('/', [ClientController::class, 'clientIndex'])->name('index');
 
-        Route::get('/table',[ClientInfoController::class, 'getAllClientInfo'])->name('index');
+    Route::prefix('list')->name('list.')->group(function () {
+
+        Route::get('/table', [ClientInfoController::class, 'getAllClientInfo'])->name('index');
 
     });
-    
-    Route::prefix('payment')->name('payment.')->group(function() {
 
-        Route::post('/pensopay/{client}',[QuickPayController::class,'pensopay'])->name('pensopay');
+    Route::prefix('payment')->name('payment.')->group(function () {
+
+        Route::post('/pensopay/{client}', [QuickPayController::class, 'pensopay'])->name('pensopay');
 
     });
 });
 
 
 Route::middleware('auth', 'can:isAdmin')->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/',[App\Http\Controllers\AdminController::class, 'adminIndex'])->name('index');
+    Route::get('/', [App\Http\Controllers\AdminController::class, 'adminIndex'])->name('index');
 
-    Route::prefix('payment')->name('payment.')->group(function() {
-        Route::post('/store/{client}',[App\Http\Controllers\AdminController::class,'store'])->name('store');
+    Route::prefix('payment')->name('payment.')->group(function () {
+        Route::post('/store/{client}', [App\Http\Controllers\AdminController::class, 'store'])->name('store');
     });
 });
-
-
