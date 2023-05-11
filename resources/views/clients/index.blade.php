@@ -93,10 +93,19 @@
                                 </span>
                             </div>
                             <div class="col-md-6">
+                            @php
+                                $status = strtolower($client->client_info->status);
+                                $isPaid = ($status === 'approved' || $status === 'paid');
+                            @endphp
+
+                            @if ($isPaid)
+                                <button type="submit" class="btn btn-success form-control rounded-0" disabled>{{ucfirst($status)}}</button>
+                            @else
                                 <button type="submit" onclick="return confirm('Please confirm transaction.')" class="btn btn-success form-control rounded-0">
                                     Pay
-                                    <i class="bi bi-credit-card-2-front float-end mt-1"> </i>
+                                    <i class="bi bi-credit-card-2-front float-end mt-1"></i>
                                 </button>
+                            @endif
                             </div>
                         </form>
                         @endif
