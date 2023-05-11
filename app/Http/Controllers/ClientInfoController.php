@@ -11,80 +11,88 @@ class ClientInfoController extends Controller
     public function getAllClientInfo(Request $request)
     {
         $search = $request->input('search');
-        $sort = $request->input('sort', 'desc'); // Default sort order is descending
-    
+        $sortBy = $request->input('sort_by', 'updated_at');
+        $sortOrder = $request->input('sort_order', 'desc');
+        
         $cif = ClientInfo::where(function ($query) use ($search) {
             $query->where('id', 'LIKE', '%' . $search . '%')
                 ->orWhereHas('client', function ($query) use ($search) {
-                    $query->where('name', 'LIKE', '%' . $search . '%');
+                    $query->where('name', 'LIKE', '%' . $search . '%')
+                    ->orWhere('pay_no', 'LIKE', '%' . $search . '%');
                 })
                 ->orWhere('invoice_no', 'LIKE', '%' . $search . '%')
                 ->orWhere('status', 'LIKE', '%' . $search . '%');
         })
-        ->orderBy('updated_at', $sort) // Sort by 'updated_at' column with the specified sort order
+        ->orderBy($sortBy, $sortOrder)
         ->paginate(10);
     
         $output = '<table class="table table-hover mb-2">
                     <tr>
                         <th>
                             Id
-                            <a href="?search=' . $search . '&sort=asc"><i class="bi bi-arrow-up"></i></a>
-                            <a href="?search=' . $search . '&sort=desc"><i class="bi bi-arrow-down"></i></a>
+                            <a href="?search=' . $search . '&sort_by=id&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
+                            <a href="?search=' . $search . '&sort_by=id&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
                         </th>
                         <th>
                             Client Id
-                            <a href="?search=' . $search . '&sort=asc"><i class="bi bi-arrow-up"></i></a>
-                            <a href="?search=' . $search . '&sort=desc"><i class="bi bi-arrow-down"></i></a>
+                            <a href="?search=' . $search . '&sort_by=client_id&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
+                            <a href="?search=' . $search . '&sort_by=client_id&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
                         </th>
                         <th>
                             Company Name
-                            <a href="?search=' . $search . '&sort=asc"><i class="bi bi-arrow-up"></i></a>
-                            <a href="?search=' . $search . '&sort=desc"><i class="bi bi-arrow-down"></i></a>
                         </th>
                         <th>
                             Pay No
-                            <a href="?search=' . $search . '&sort=asc"><i class="bi bi-arrow-up"></i></a>
-                            <a href="?search=' . $search . '&sort=desc"><i class="bi bi-arrow-down"></i></a>
                         </th>
                         <th>
                             Invoice No
-                            <a href="?search=' . $search . '&sort=asc"><i class="bi bi-arrow-up"></i></a>
-                            <a href="?search=' . $search . '&sort=desc"><i class="bi bi-arrow-down"></i></a>
+                            <a href="?search=' . $search . '&sort_by=invoice_no&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
+                            <a href="?search=' . $search . '&sort_by=invoice_no&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
                         </th>
                         <th>
                             Status
-                            <a href="?search=' . $search . '&sort=asc"><i class="bi bi-arrow-up"></i></a>
-                            <a href="?search=' . $search . '&sort=desc"><i class="bi bi-arrow-down"></i></a>
+                            <a href="?search=' . $search . '&sort_by=status&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
+                            <a href="?search=' . $search . '&sort_by=status&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
                         </th>
                         <th>
-                            Date Paid
-                            <a href="?search=' . $search . '&sort=asc"><i class="bi bi-arrow-up"></i></a>
-                            <a href="?search=' . $search . '&sort=desc"><i class="bi bi-arrow-down"></i></a>
-                        </th>
-                    </tr>';
+                            Currency
+                            <a href="?search=' . $search . '&sort_by=currency&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
+                            <a href="?search=' . $search . '&sort_by=currency&sort _order=desc"><i class="bi bi-arrow-down"></i></a>
+                    </th>
+                    <th>
+                        Amount
+                    </th>
+                    <th>
+                        Date Paid
+                        <a href="?search=' . $search . '&sort_by=updated_at&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
+                        <a href="?search=' . $search . '&sort_by=updated_at&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
+                    </th>
+                </tr>';
+
+    $count = ($cif->currentPage() - 1) * $cif->perPage();
+    $button = '<i class="bi bi-eye-fill"></i>';
+    foreach ($cif as $item) {
+        $count++;
+        $output .= "<tr>";
+        $output .= "<td class='text-muted fw-bold'>" . $count . "</td>";
+        $output .= "<td class='text-muted fw-bold'>" . $item->id . "</td>";
+        $output .= "<td class='text-muted fw-bold'>" . optional($item->client)->name . "</td>";
+        $output .= "<td class='text-muted fw-bold'>" . optional($item->client)->pay_no . "</td>";
+        $output .= '<td><button id="view" class="view btn btn-primary" value="' . $item->invoice_no . '">' . $button . ' ' . $item->invoice_no . '</button></td>';
+        $output .= "<td class='text-muted fw-bold'>" . ucfirst($item->status) . "</td>";
+        $output .= "<td class='text-muted fw-bold'>" . $item->currency . "</td>";
+        $output .= "<td class='text-muted fw-bold'>" . $item->orig_amount . "</td>";
+        $output .= "<td class='text-muted fw-bold'>" . $item->updated_at . "</td>";
+        $output .= "</tr>";
+    }
+
+    $output .= '</table>';
+    $output .= $cif->appends(['search' => $search, 'sort_by' => $sortBy, 'sort_order' => $sortOrder])->links();
+
+    return view('clients.table', ['cif_table' => $output]);
+}
 
     
-    
-        $count = ($cif->currentPage() - 1) * $cif->perPage();
-        $button = '<i class="bi bi-eye-fill"></i>';
-        foreach ($cif as $item) {
-            $count++;
-            $output .= "<tr>";
-            $output .= "<td class='text-muted fw-bold'>" . $count . "</td>";
-            $output .= "<td class='text-muted fw-bold'>" . $item->id . "</td>";
-            $output .= "<td class='text-muted fw-bold'>" . optional($item->client)->name . "</td>";
-            $output .= "<td class='text-muted fw-bold'>" . optional($item->client)->pay_no . "</td>";
-            $output .= '<td><button id="view" class="view btn btn-primary" value="' . $item->invoice_no . '">' . $button . ' ' . $item->invoice_no . '</button></td>';
-            $output .= "<td class='text-muted fw-bold'>" . $item->status . "</td>";
-            $output .= "<td class='text-muted fw-bold'>" . $item->updated_at . "</td>";
-            $output .= "</tr>";
-        }
-    
-        $output .= '</table>';
-        $output .= $cif->appends(['search' => $search])->links();
-    
-        return view('clients.table', ['cif_table' => $output]);
-    }
     
     public function getSuccess(Request $request)
     {
