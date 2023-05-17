@@ -15,6 +15,11 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <!-- CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
+
+<!-- JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" integrity="sha512-FazN8lL+0QhR7OeDOEq+eM9dlbN2g9p2P4uSnmBmVOvKZixUTkR5iJUN57Sht8GrZ41p0wcpkDp+4YutOJhqtw==" crossorigin="anonymous"></script>
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -56,9 +61,12 @@
                                 </li>
                             @endif
                         @else
+                            <li class="nav-item">
+                                    <a class="nav-link" href="/history"><k style="color:white;">History</k></a>
+                           </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle  text text-light" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
+                                {{ Auth::user()->name }}
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
@@ -85,10 +93,119 @@
     </div>
 </body>
 </html>
+
+ <script>
+      $(document).ready(function() {
+        // Call API to get list of clients
+        $.ajax({
+          url: "https://example.com/api/clients",
+          method: "GET",
+          success: function(response) {
+            // Loop through the clients and add them to the table
+            $.each(response, function(index, client) {
+              var newRow = $("<tr>");
+              newRow.append($("<td>").text(client.name));
+              newRow.append($('<td>').html('<button class="btn btn-danger btn-sm" data-client-id="' + client.id + '"><i class="fas fa-trash-alt"></i></button>'));
+              $('#clients tbody').append(newRow);
+            });
+          },
+          error: function(error) {
+            console.log(error);
+          }
+        });
+      });
+    </script>
+
 <script>
  $(document).ready(function() {
+    $('.search').on('keyup', function() {
+    var query = $(this).val();
+    $.ajax({
+        url: '/clientssearch',
+        method: 'GET',
+        data: {query: query},
+        // Assuming that `response` is an array of objects with `name` and `pay_no` properties
+        success: function(response) {
+            // Clear the table body before appending new rows
+            $('#clients tbody').empty();
+            
+            // Loop through each object in the response and create a new table row for it
+                var currentPage = 1;
+                var rowsPerPage = 10;
+                var totalRows = response.length;
 
-    $(".view").on("click", function(){
+                function displayTable() {
+                // Calculate the starting and ending row indexes for the current page
+                var startIndex = (currentPage - 1) * rowsPerPage;
+                var endIndex = startIndex + rowsPerPage;
+                if (endIndex > totalRows) {
+                    endIndex = totalRows;
+                }
+
+                // Clear the existing table rows
+                $('#clients tbody').empty();
+
+                // Loop through the clients for the current page and add a new table row for each one
+                for (var i = startIndex; i < endIndex; i++) {
+                    var client = response[i];
+                    var newRow = $('<tr id="'+client.id+'">');
+                    newRow.append($('<td>').text(client.name));
+                    newRow.append($('<td>').html('<button id="delete" class="btn btn-danger btn-sm" data-client-id="'+client.id+'"><i class="fas fa-trash-alt"></i></button>'));
+                    $('#clients tbody').append(newRow);
+                }
+
+                 // Update the pagination links
+                var totalPages = Math.ceil(totalRows / rowsPerPage);
+                var paginationHtml = '';
+                if (totalPages > 1) {
+                    var startPage = Math.max(1, currentPage - 2);
+                    var endPage = Math.min(totalPages, startPage + 4);
+                    if (endPage - startPage < 4) {
+                    startPage = Math.max(1, endPage - 4);
+                    }
+
+                    paginationHtml += '<ul class="pagination justify-content-left">';
+                    if (currentPage > 1) {
+                    paginationHtml += '<li class="page-item"><a class="page-link" href="#" data-page="' + (currentPage - 1) + '">Prev</a></li>';
+                    }
+
+                    for (var i = startPage; i <= endPage; i++) {
+                    var activeClass = '';
+                    if (i === currentPage) {
+                        activeClass = ' active';
+                    }
+                    paginationHtml += '<li class="page-item' + activeClass + '"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>';
+                    }
+
+                    if (currentPage < totalPages) {
+                    paginationHtml += '<li class="page-item"><a class="page-link" href="#" data-page="' + (currentPage + 1) + '">Next</a></li>';
+                    }
+                    paginationHtml += '</ul>';
+                }
+                $('#pagination').html(paginationHtml);
+                }
+
+                // Handle page link clicks
+                $('#pagination').on('click', 'a.page-link', function(event) {
+                event.preventDefault();
+                currentPage = $(this).data('page');
+                displayTable();
+                });
+
+                // Initial table display
+                displayTable();
+
+                            
+                            
+    
+                        }
+                    });
+                });
+
+
+
+    
+                $(".view").on("click", function(){
         var viewId = $(this).val();
         $.ajax({
             url:"{{ route('/getInvoice') }}",
@@ -107,6 +224,34 @@
             },
         });
     });
+});
+
+
+$(document).on('click', '#delete', function() {
+    var clientId = $(this).data('client-id');
+    if (confirm('Are you sure you want to delete this client?')) {
+        $.ajax({
+            url: '/remove',
+            method: 'POST',
+            data: {
+                id: clientId,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(data) {
+                console.log(data.success);
+                if(data.success){
+                    $('#' + clientId).remove();
+                    window.alert('Client successfully deleted!');
+                }
+                else{
+                    console.log("Failed to Delete Client");
+                }
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                // Display an error message
+            }
+        });
+    }
 });
 
 </script>

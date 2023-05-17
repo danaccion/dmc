@@ -92,8 +92,6 @@ class ClientInfoController extends Controller
     return view('clients.table', ['cif_table' => $output]);
 }
 
-    
-    
     public function getSuccess(Request $request)
     {
         list($output, $status) = $this->getClientInfo($request->id);
