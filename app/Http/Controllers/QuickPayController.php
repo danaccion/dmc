@@ -126,6 +126,7 @@ class QuickPayController extends Controller
         $url = '/payments/' . $id . '/link';
         $payments = $client_Quikpay->request->put($url, $form);
         $status = $payments->httpStatus();
+        dd($status);
         if ($status == 200) {
             $jsonObj = json_encode($payments);
             $responseData = json_decode($jsonObj);
