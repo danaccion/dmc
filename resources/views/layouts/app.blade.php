@@ -61,10 +61,11 @@
                                 </li>
                             @endif
                         @else
-                            <li class="nav-item">
+                           
+                       @if (Auth::user()->is_admin)
+                           <li class="nav-item">
                                     <a class="nav-link" href="/client/list/table"><k style="color:white;">History</k></a>
                            </li>
-                       @if (Auth::user()->is_admin)
                             <li class="nav-item">
                                 <a class="nav-link" href="/history"><k style="color:white;">QuickPay Logs</k></a>
                             </li>
