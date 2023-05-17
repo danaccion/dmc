@@ -23,6 +23,7 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     // Admin dashboard route
     Route::middleware('can:isAdmin')->group(function () {
+        Route::post('/remove', [App\Http\Controllers\AdminController::class, 'remove'])->name('remove');
         Route::get('/home', [App\Http\Controllers\AdminController::class, 'adminIndex'])->name('admin.index');
     });
     Route::get('/client', [ClientController::class, 'clientIndex'])->name('index');
@@ -55,8 +56,8 @@ Route::middleware('auth')->group(function () {
 
     // PENSOPAY API
     Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
-    Route::delete('/clients/{id}', [App\Http\Controllers\AdminController::class, 'delete'])->name('clients.delete');
-    Route::get('/clients/search', [AdminController::class, 'search'])->name('clients.search');
+    
+    Route::get('/clientssearch', [App\Http\Controllers\AdminController::class, 'search'])->name('clients.search');
 });
 
 Auth::routes();
