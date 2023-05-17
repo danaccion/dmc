@@ -62,8 +62,14 @@
                             @endif
                         @else
                             <li class="nav-item">
-                                    <a class="nav-link" href="/history"><k style="color:white;">History</k></a>
+                                    <a class="nav-link" href="/client/list/table"><k style="color:white;">History</k></a>
                            </li>
+                       @if (Auth::user()->is_admin)
+                            <li class="nav-item">
+                                <a class="nav-link" href="/history"><k style="color:white;">QuickPay Logs</k></a>
+                            </li>
+                        @endif
+
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle  text text-light" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 {{ Auth::user()->name }}
