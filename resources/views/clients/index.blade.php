@@ -57,7 +57,7 @@
                                     </a>
                                 </div>
                                 <div class="col-md-5">
-                                    <a href="{{ !empty($client->client_info->file) ? $client->client_info->file : 'Unknown' }}"
+                                    <a href="public/{{ !empty($client->client_info->file) ? $client->client_info->file : 'Unknown' }}"
                                         class="btn btn-primary form-control rounded-0 mb-2"
                                         target="_blank">
                                         View Invoice
