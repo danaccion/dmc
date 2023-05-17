@@ -93,7 +93,7 @@
 </script> -->
         </div>
         <div class="col-md-6" style="padding-left:20px; font-size:15px;">
-        <h1>Create New Transaction</h1>
+        <h2>Create New Transaction</h2>
         <form method="post" action="{{ route('admin.payment.store',$client) }}"  enctype="multipart/form-data">
                 @csrf
 
@@ -173,14 +173,14 @@
                 </div>
                 
                 <div class="form-group">
-                <label for="additional_fee">Additional Fee:</label>
+                <label for="additional_fee">Additional Fee: (Check the checkbox to remove the fee) </label>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="additional_fee" value="1.25" name="additional_fee">
-                    <div class="input-group-append">
-                    <div class="input-group-text">
+                    <div class="input-group-append" style="background-color:none" >
+                    <div class="input-group-text"> <br>
                         <input type="checkbox" id="additionalFeeCheckbox">
                     </div>
                     </div>
+                    <input type="text" class="form-control" id="additional_fee" value="1.25" name="additional_fee">
                 </div>
                 </div>
 
