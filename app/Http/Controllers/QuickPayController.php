@@ -94,6 +94,7 @@ class QuickPayController extends Controller
                 $id = $jsonData->id;
                 // Authorized
                 $url = $this->putPayment($id, $client_Quikpay, $amount, $merchant_id, $client->client_info->id);
+                dd('Location:' . $url);
                 header('Location:' . $url);
                 exit;
             } else {
@@ -196,7 +197,6 @@ class QuickPayController extends Controller
 
     function getQuickPayStatus($code)
     {
-        dd($code);
         $status_codes = array(
             20000 => "Approved",
             40000 => "Rejected by acquirer",
