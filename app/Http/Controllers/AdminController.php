@@ -16,7 +16,7 @@ class AdminController extends Controller
      */
     public function adminIndex(Request $request)
     {
-        $clients = Client::where('status', 'off')->orderby('name', 'asc')->paginate(10); // retrieve all clients from the database
+        $clients = Client::where('status', 'on')->orderby('name', 'asc')->paginate(10); // retrieve all clients from the database
         $transactionId = uniqid('TXN');
         // Check if the transaction ID already exists in the database and regenerate if necessary
         while (ClientInfo::where('transaction_id', $transactionId)->exists()) {
@@ -110,14 +110,14 @@ class AdminController extends Controller
 
     public function index(Request $request)
     {
-        $clients = Client::where('status', 'off')->orderby('name', 'asc')->paginate(10); // retrieve all clients from the database
+        $clients = Client::where('status', 'on')->orderby('name', 'asc')->paginate(10); // retrieve all clients from the database
         return view('admin', compact('clients'));
     }
 
     public function search(Request $request)
     {
         $query = $request->input('query');
-        $clientss = Client::where('name', 'LIKE', '%' . $query . '%')->where('status', 'off')->orderby('name', 'asc')->get();
+        $clientss = Client::where('name', 'LIKE', '%' . $query . '%')->where('status', 'on')->orderby('name', 'asc')->get();
         return response()->json($clientss);
     }
     

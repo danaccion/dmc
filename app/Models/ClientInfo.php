@@ -30,4 +30,9 @@ class ClientInfo extends Model
     {
         return $this->belongsTo(Client::class);
     }
+
+    public function orderIdGenerator()
+    {
+        return $this->hasMany(OrderIdGenerator::class);
+    }
 }
