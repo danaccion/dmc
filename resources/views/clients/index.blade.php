@@ -93,10 +93,19 @@
                                 </span>
                             </div>
                             <div class="col-md-6">
-                                <button type="submit" onclick="return confirm('Please confirm transaction.')" class="btn btn-success form-control rounded-0">
-                                    Pay
-                                    <i class="bi bi-credit-card-2-front float-end mt-1"> </i>
+                            @if (!empty($client->client_info->status) && (strcasecmp($client->client_info->status, 'paid') === 0 || strcasecmp($client->client_info->status, 'approved') === 0))
+   
+                                <button type="submit" class="btn btn-success form-control rounded-0"
+                                disabled>
+                                    {{ ucfirst($client->client_info->status) }}
+                                    <i class="bi bi-credit-card-2-front float-end mt-1"></i>
                                 </button>
+                            @else
+                                <button type="submit" onclick="return confirm('Please confirm transaction.')" class="btn btn-success form-control rounded-0" >
+                                Pay
+                                <i class="bi bi-credit-card-2-front float-end mt-1"></i>
+                                </button>
+                            @endif
                             </div>
                         </form>
                         @endif
