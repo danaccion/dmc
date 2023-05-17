@@ -20,6 +20,7 @@ Route::get('/', function () {
     return view('auth/login');
 });
 
+
 Route::middleware('auth')->group(function () {
     // Admin dashboard route
     Route::middleware('can:isAdmin')->group(function () {
@@ -32,7 +33,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/history', [App\Http\Controllers\QuickPayController::class, 'getHistory'])->name('/history');
 
     // QUICKPAY API
-    Route::post('/handleCallback', [App\Http\Controllers\QuickPayController::class, 'handleCallback'])->name('handleCallback');
 
     Route::get('/quickPayTable', [App\Http\Controllers\QuickPayController::class, 'quickPayTable'])->name('quickPayTable');
 
@@ -79,6 +79,7 @@ Route::middleware('auth')->prefix('client')->name('client.')->group(function () 
     });
 });
 
+Route::post('/handleCallback', [App\Http\Controllers\QuickPayController::class, 'handleCallback'])->name('handleCallback');
 
 Route::middleware('auth', 'can:isAdmin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [App\Http\Controllers\AdminController::class, 'adminIndex'])->name('index');
