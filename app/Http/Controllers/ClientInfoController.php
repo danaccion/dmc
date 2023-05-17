@@ -23,8 +23,9 @@ class ClientInfoController extends Controller
                 ->orWhere('invoice_no', 'LIKE', '%' . $search . '%')
                 ->orWhere('status', 'LIKE', '%' . $search . '%');
         })
-        ->orderBy($sortBy, $sortOrder)
+        ->orderBy('created_at', $sortOrder ?: 'desc')
         ->paginate(10);
+    
     
         $output = '<table class="table table-hover mb-2">
                     <tr>
@@ -67,6 +68,11 @@ class ClientInfoController extends Controller
                         <a href="?search=' . $search . '&sort_by=updated_at&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
                         <a href="?search=' . $search . '&sort_by=updated_at&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
                     </th>
+                    <th>
+                        Date Created
+                        <a href="?search=' . $search . '&sort_by=created_at&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
+                        <a href="?search=' . $search . '&sort_by=created_at&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
+                    </th>
                 </tr>';
 
     $count = ($cif->currentPage() - 1) * $cif->perPage();
@@ -82,6 +88,7 @@ class ClientInfoController extends Controller
         $output .= "<td class='text-muted fw-bold'>" . ucfirst($item->status) . "</td>";
         $output .= "<td class='text-muted fw-bold'>" . $item->currency . "</td>";
         $output .= "<td class='text-muted fw-bold'>" . $item->orig_amount . "</td>";
+        $output .= "<td class='text-muted fw-bold'>" . $item->created_at . "</td>";
         $output .= "<td class='text-muted fw-bold'>" . $item->updated_at . "</td>";
         $output .= "</tr>";
     }
