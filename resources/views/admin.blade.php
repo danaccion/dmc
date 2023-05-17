@@ -1,22 +1,20 @@
 @extends('layouts.app')
-
-@section('content')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                <script>
-                    $(document).ready(function () {
-                        $('#search').on('keyup', function () {
-                            var query = $(this).val();
-                            $.ajax({
-                                url: "{{ route('clients.search') }}",
-                                method: 'GET',
-                                data: {query: query},
-                                success: function (data) {
-                                    $('#results').html(data);
-                                }
-                            });
-                        });
-                    });
-                </script>
+<script>
+  $(document).ready(function() {
+    $('#additionalFeeCheckbox').change(function() {
+      if ($(this).is(':checked')) {
+        $('#additional_fee').val('');
+      }
+    });
+  });
+</script>
+@section('content')
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
 <div class="container">
     <div class="row">
         <div class="col-md-4" style="border-right: 0.5px solid grey; padding-left: 10px; font: size 15px;">
@@ -29,28 +27,14 @@
             </form>
             <hr>-->
 
+        <!--
                 <div>
                     <label for="search">Search clients:</label>
                     <input type="text" id="search" name="search" autocomplete="off">
                 </div>
-                <div id="results"></div>
 
-                
-
-            @if (count($clients) > 0)
-                <ul>
-                    @foreach ($clients as $client)
-                        <li>{{ $client->name }} ({{ $client->email }})</li>
-                    @endforeach
-                </ul>
-            @else
-                <p>No results found.</p>
-            @endif
-
-            <form action="{{ route('clients.delete', ['2']) }}" method="POST">
+            <form action="/deleteclient" method="POST">
                 @csrf
-                @csrf
-                @method('DELETE')
                 @foreach($clients as $client)
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="clients[]" value="{{ $client->id }}">
@@ -60,8 +44,53 @@
                 </div>
                 @endforeach
                 <hr>
-                <button type="submit" value="Delete" class="btn btn-danger">Delete selected clients</button>
+                <button type="submit" class="btn btn-danger">Delete selected clients</button>
             </form>
+-->
+            
+
+          
+            @csrf
+
+            <div>
+                <h2 for="search">Clients</h2>
+                <input type="text" id="search" class="form-control me-2 search" placeholder="Search for clients">
+            </div>
+
+            <table class="clients" id="clients">
+                <thead>
+                    <tr>
+                        <th></th>
+                    </tr>
+                </thead>
+                <br>
+                <tbody>
+                  <!--  @foreach ($clients as $client)
+                        <tr>
+                            <td>{{ $client->name }}</td>
+                            <td>
+                            <button class="btn btn-danger btn-sm" data-client-id="{{ $client->id }}">
+                            <i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                    @endforeach -->
+                </tbody>
+            </table>
+            <div id="pagination"></div>
+
+<!-- <script>
+    $('#search').on('input', function() {
+        var query = $(this).val();
+        $.ajax({
+            url: '/clientssearch',
+            method: 'POST',
+            data: {query: query},
+            success: function(response) {
+                $('tbody').html(response);
+            }
+        });
+    });
+</script> -->
         </div>
         <div class="col-md-6" style="padding-left:20px; font-size:15px;">
         <h1>Create New Transaction</h1>
@@ -69,8 +98,10 @@
                 @csrf
 
                 <div class="form-group">
-                    <label for="transaction_number">Transaction Number</label>
-                    <input type="text" class="form-control" id="transaction_number" name="transaction_number" required>
+                    <label for="transaction_number">Transaction Number:</label>
+                    {{$transactionId}}
+                    <input type="hidden" class="form-control" id="transaction_number" name="transaction_number" value="<?php echo $transactionId?>" required>
+                    <br> <br>
                 </div>
 
                 <div class="form-group">
@@ -80,7 +111,7 @@
 
                 <div class="form-group">
                     <label for="client_pay_number">Client Pay Number</label>
-                    <input type="text" class="form-control" id="client_pay_number" name="client_pay_number" required>
+                    <input type="number" class="form-control" id="client_pay_number" name="client_pay_number" required>
                 </div>
 
                 <div class="form-group">
@@ -99,19 +130,60 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="country">Country</label>
-                    <input type="text" class="form-control" id="country" name="country" required>
+                <label for="dropdownSelect">Country</label>
+                <select name="country" class="form-control" id="dropdownSelect">
+                    <option value="DMC Denmark">DMC Denmark</option>
+                    <option value="DMC Nordic">DMC Nordic</option>
+                    <option value="DMC Norway">DMC Norway</option>
+                    <option value="DMC Sweden">DMC Sweden</option>
+                </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="currency">Currency</label>
-                    <input type="text" class="form-control" id="currency" name="currency" required>
+                <label for="currency">Select a currency:</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="currency" id="currency1" value="DKK">
+                    <label class="form-check-label" for="currency1">
+                    DKK
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="currency" id="currency2" value="SEK">
+                    <label class="form-check-label" for="currency2">
+                    SEK
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="currency" id="currency3" value="NOK">
+                    <label class="form-check-label" for="currency3">
+                    NOK
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="currency" id="currency4" value="EUR">
+                    <label class="form-check-label" for="currency4">
+                    EUR
+                    </label>
+                </div>
                 </div>
 
                 <div class="form-group">
                     <label for="total_amount_to_pay">Total Amount to Pay</label>
                     <input type="number" class="form-control" id="total_amount_to_pay" name="total_amount_to_pay" required>
                 </div>
+                
+                <div class="form-group">
+                <label for="additional_fee">Additional Fee:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="additional_fee" value="1.25" name="additional_fee">
+                    <div class="input-group-append">
+                    <div class="input-group-text">
+                        <input type="checkbox" id="additionalFeeCheckbox">
+                    </div>
+                    </div>
+                </div>
+                </div>
+
                 <br>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>

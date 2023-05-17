@@ -21,7 +21,9 @@ class ClientInfo extends Model
         'amount',
         'status',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'transaction_id',
+        'additional_fee'
     ];
 
     public function client()

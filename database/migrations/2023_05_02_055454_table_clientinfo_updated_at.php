@@ -10,6 +10,9 @@ return new class extends Migration
     {
         Schema::table('gkojgnvu_client_info', function (Blueprint $table) {
             $table->timestamp('updated_at')->nullable();
+            $table->string('transaction_id', 255)->nullable();
+            $table->float('additional_fee')->nullable();
+
         });
     }
 
