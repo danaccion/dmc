@@ -26,4 +26,9 @@ class Client extends Model
     {
         return $this->belongsTo(ClientInfo::class,'id','client_id');
     }
+
+    public function orderId()
+    {
+        return $this->belongsTo(OrderIdGenerator::class,'id','client_id');
+    }
 }
