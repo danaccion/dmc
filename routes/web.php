@@ -86,5 +86,6 @@ Route::middleware('auth', 'can:isAdmin')->prefix('admin')->name('admin.')->group
 
     Route::prefix('payment')->name('payment.')->group(function () {
         Route::post('/store/{client}', [App\Http\Controllers\AdminController::class, 'store'])->name('store');
+        Route::post('/stored', [App\Http\Controllers\AdminController::class, 'stored'])->name('stored');
     });
 });

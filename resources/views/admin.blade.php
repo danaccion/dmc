@@ -94,7 +94,7 @@
         </div>
         <div class="col-md-6" style="padding-left:20px; font-size:15px;">
         <h2>Create New Transaction</h2>
-        <form method="post" action="{{ route('admin.payment.store', $client ? $client : '') }}" enctype="multipart/form-data">
+        <form method="post" action="{{ is_null($client) ? route('admin.payment.stored') : route('admin.payment.store', $client) }}" enctype="multipart/form-data">
                 @csrf
 
                 <div class="form-group">
