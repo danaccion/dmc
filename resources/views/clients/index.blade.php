@@ -57,7 +57,9 @@
                                     </a>
                                 </div>
                                 <div class="col-md-5">
-                                    <a href="public/{{ !empty($client->client_info->file) ? $client->client_info->file : 'Unknown' }}"
+
+                                    <a href="pdf/{{ !empty($client->client_info->file) ? $client->client_info->file : 'Unknown' }}"
+
                                         class="btn btn-primary form-control rounded-0 mb-2"
                                         target="_blank">
                                         View Invoice
@@ -72,7 +74,19 @@
                                     {{ !empty($client->client_info) ? $client->client_info->invoice_no : 'No data'}}
                                 </h3>
                             </span>
-                            <span class="text-muted"> Total amount
+                            <span class="text-muted"> Original Amount
+                                <h3 class="fs-5">
+                                    {{ !empty($client->client_info) ? $client->client_info->currency : '' }}
+                                    {{ !empty($client->client_info) ? $client->client_info->orig_amount - $client->client_info->additional_fee  : '0.00' }}
+                                </h3>
+                            </span>
+                            <span class="text-muted"> Additional Fee:
+                                <h3 class="fs-5">
+                                    {{ !empty($client->client_info) ? $client->client_info->currency : '' }}
+                                    {{ !empty($client->client_info) ? $client->client_info->additional_fee : '0.00' }}
+                                </h3>
+                            </span>
+                            <span class="text-muted"> Total Amount to Pay:
                                 <h3 class="fw-bold">
                                     {{ !empty($client->client_info) ? $client->client_info->currency : '' }}
                                     {{ !empty($client->client_info) ? $client->client_info->orig_amount : '0.00' }}
@@ -99,12 +113,14 @@
                                 disabled>
                                     {{ ucfirst($client->client_info->status) }}
                                     <i class="bi bi-credit-card-2-front float-end mt-1"></i>
+
                                 </button>
                             @else
                                 <button type="submit" onclick="return confirm('Please confirm transaction.')" class="btn btn-success form-control rounded-0" >
                                 Pay
                                 <i class="bi bi-credit-card-2-front float-end mt-1"></i>
                                 </button>
+
                             @endif
                             </div>
                         </form>
