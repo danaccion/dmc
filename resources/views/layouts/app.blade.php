@@ -29,7 +29,7 @@
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light shadow-sm"
-        style="background: linear-gradient(90deg, rgba(36,25,217,1) 0%, rgba(12,12,121,1) 35%, rgba(12,99,117,1) 100%);">
+        style="background: linear-gradient(90deg, rgba(189,233,255,1) 0%, rgba(114,157,215,1) 35%, rgba(189,233,255,1) 100%);">
             <div class="container">
                 <!--<a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'DMC') }}
@@ -61,14 +61,13 @@
                                 </li>
                             @endif
                         @else
-                           
-                       @if (Auth::user()->is_admin)
+                        @if (Auth::user()->is_admin)
                            <li class="nav-item">
                                     <a class="nav-link" href="/client/list/table"><k style="color:white;">History</k></a>
                            </li>
-                            <li class="nav-item">
+                            <!--<li class="nav-item">
                                 <a class="nav-link" href="/history"><k style="color:white;">QuickPay Logs</k></a>
-                            </li>
+                            </li>-->
                         @endif
 
                             <li class="nav-item dropdown">
