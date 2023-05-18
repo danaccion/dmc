@@ -108,6 +108,58 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Transaction Successfully Created!');
     }
 
+    public function stored(Request $request)
+    {
+        $request->validate([
+            "invoice_file" => "required|mimetypes:application/pdf|max:10000"
+        ]);
+
+        $client = new Client();
+        $client->name = $request->input('company_name');
+        $client->pay_no = $request->input('client_pay_number');
+        $client->use_no = 1;
+        $client->role = 'admin';
+        $client->status = 'on';
+        $client->client_currency = $request->input('currency');
+        $client->country = $request->input('country');
+        $client->created_at = Carbon::now();
+        $client->save();
+
+        $client1 = Client::where('pay_no', $request->input('client_pay_number'))->first();
+       
+        $file = $request->file('invoice_file');
+        $filename = date('YmdHi') . $file->getClientOriginalName();
+        $file->move(public_path('pdf'), $filename);
+        $input['file'] = $filename;
+        $client->load('client_info');
+        $request->merge(['file' => $filename]);
+        $request->merge(['client_id' => $client->id]);
+        $request->merge(['post_id' => null]);
+        $request->merge(['description' => $request->travel_description]);
+        $request->merge(['currency' => $client1->client_currency]);
+        $request->merge(['invoice_no' => $request->invoice_order_number]);
+        $request->merge(['orig_amount' => $request->total_amount_to_pay + $request->additional_fee]);
+        $request->merge(['transaction_id' => $request->transaction_number]);
+        $request->merge(['additional_fee' => $request->additional_fee]);
+
+        // 👇 replace numbers with empty string
+        $result = str_replace('.', "", $request->total_amount_to_pay);
+        $request->merge(['amount' => $result]);
+        $request->merge(['post_id' => 0]);
+        $currency = $client1->client_currency;
+
+        ClientInfo::create($request->all());
+
+
+        $clients = Client::where('status', 'on')->orderby('name', 'asc')->paginate(10); // retrieve all clients from the database
+        $transactionId = uniqid('TXN');
+        // Check if the transaction ID already exists in the database and regenerate if necessary
+        while (ClientInfo::where('transaction_id', $transactionId)->exists()) {
+            $transactionId = uniqid('TXN');
+        }
+        //return view('admin', ['clients' => $clients, 'transactionId' => $transactionId])->with('success', 'Operation completed successfully.');
+        return redirect()->back()->with('success', 'Transaction Successfully Created!');
+    }
     public function index(Request $request)
     {
         $clients = Client::where('status', 'on')->orderby('name', 'asc')->paginate(10); // retrieve all clients from the database
