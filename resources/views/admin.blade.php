@@ -131,41 +131,41 @@
 
                 <div class="form-group">
                 <label for="dropdownSelect">Country</label>
-                <select name="country" class="form-control" id="dropdownSelect">
-                    <option value="DMC Denmark">DMC Denmark</option>
+                <select name="country" class="form-control" id="dropdownSelect" required>
+                    <option value="DMC Denmark" selected>DMC Denmark</option>
                     <option value="DMC Nordic">DMC Nordic</option>
                     <option value="DMC Norway">DMC Norway</option>
                     <option value="DMC Sweden">DMC Sweden</option>
                 </select>
                 </div>
 
-                <div class="form-group">
+            <div class="form-group">
                 <label for="currency">Select a currency:</label>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="currency" id="currency1" value="DKK">
+                    <input class="form-check-input" type="radio" name="currency" id="currency1" value="DKK" required>
                     <label class="form-check-label" for="currency1">
-                    DKK
+                        DKK
                     </label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="currency" id="currency2" value="SEK">
                     <label class="form-check-label" for="currency2">
-                    SEK
+                        SEK
                     </label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="currency" id="currency3" value="NOK">
                     <label class="form-check-label" for="currency3">
-                    NOK
+                        NOK
                     </label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="currency" id="currency4" value="EUR">
                     <label class="form-check-label" for="currency4">
-                    EUR
+                        EUR
                     </label>
                 </div>
-                </div>
+            </div>
 
                 <div class="form-group">
                     <label for="total_amount_to_pay">Total Amount to Pay</label>
