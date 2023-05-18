@@ -94,8 +94,7 @@
         </div>
         <div class="col-md-6" style="padding-left:20px; font-size:15px;">
         <h2>Create New Transaction</h2>
-        @if(isset($client))
-        <form method="post" action="{{ route('admin.payment.store',$client) }}"  enctype="multipart/form-data">
+        <form method="post" action="{{ route('admin.payment.store', $client ? $client : '') }}" enctype="multipart/form-data">
                 @csrf
 
                 <div class="form-group">
@@ -188,7 +187,6 @@
                 <br>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
-            @endif
         </div>
     </div>
 </div>
