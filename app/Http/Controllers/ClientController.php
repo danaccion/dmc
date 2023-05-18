@@ -20,7 +20,7 @@ class ClientController extends Controller
         else {
             $client = null;
         }
-
+        //$orig = $client->client_info->orig_amount - $client->client_info->transaction_fee;
         return view('clients.index', [
             'client' => $client,
             's' => $s,
