@@ -127,8 +127,7 @@ class QuickPayController extends Controller
                 <div class="center-div">
                     <div class="alert alert-danger" role="alert">
                     <img src="/img/dmc-logo.png" alt="description of myimage">
-                            '.
-                            'Error Code: '.$data->status_code.' Pay no. must be 6 digit or more on test mode 
+                            '. $data->status_code . ' ' . $data->status_message;'
                     </div>
                 </div>
         
