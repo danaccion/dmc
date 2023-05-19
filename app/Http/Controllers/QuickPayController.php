@@ -104,7 +104,46 @@ class QuickPayController extends Controller
                 header('Content-Type: application/json');
 
                 // Output the JSON response
-                echo $json_response;
+                $data = json_decode($json_response);
+
+                $status_code = $data->status_code;
+                $status_message = $data->status_message;
+
+                echo ' <!DOCTYPE html>
+                <html>
+                <head>
+                    <!-- Add Bootstrap CSS CDN link here -->
+                    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+                    <style>
+                    .center-div {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh;
+                    }
+                </style>
+                    </head>
+                <body>
+                <div class="center-div">
+                    <div class="alert alert-danger" role="alert">
+                    <img src="/img/dmc-logo.png" alt="description of myimage">
+                            '.
+                            'Error Code: '.$data->status_code.' Pay no. must be 6 digit or more on test mode 
+                    </div>
+                </div>
+        
+                
+                    <!-- Add Bootstrap JS CDN link here -->
+                    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+                </body>
+                </html>
+                ';
+                // $json_response = json_encode($error_message);
+                // // Set the content type to JSON
+                // header('Content-Type: application/json');
+
+                // // Output the JSON response
+                // echo $json_response;
             }
         } catch (Exception $e) {
             echo $e;
