@@ -142,25 +142,25 @@
             <div class="form-group">
                 <label for="currency">Select a currency:</label>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="currency" id="currency1" value="DKK" required>
+                    <input class="form-check-input" style="background-color: #A8A8A7;border-color: #A8A8A7;" type="radio" name="currency" id="currency1" value="DKK" required>
                     <label class="form-check-label" for="currency1">
                         DKK
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="currency" id="currency2" value="SEK">
+                    <input class="form-check-input" style="background-color: #A8A8A7;border-color: #A8A8A7;" type="radio" name="currency" id="currency2" value="SEK">
                     <label class="form-check-label" for="currency2">
                         SEK
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="currency" id="currency3" value="NOK">
+                    <input class="form-check-input" style="background-color: #A8A8A7;border-color: #A8A8A7;" type="radio" name="currency" id="currency3" value="NOK">
                     <label class="form-check-label" for="currency3">
                         NOK
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="currency" id="currency4" value="EUR">
+                    <input class="form-check-input" style="background-color: #A8A8A7;border-color: #A8A8A7;" type="radio" name="currency" id="currency4" value="EUR">
                     <label class="form-check-label" for="currency4">
                         EUR
                     </label>
@@ -185,10 +185,12 @@
                 </div>
 
                 <br>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn" style="background-color:#A8A8A7">Submit</button>
             </form>
         </div>
     </div>
 </div>
 
 @endsection
+
+
