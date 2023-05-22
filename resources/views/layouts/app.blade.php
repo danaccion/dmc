@@ -29,7 +29,7 @@
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light shadow-sm"
-        style="background: linear-gradient(90deg, rgba(50,82,58,1) 0%, rgba(39,104,55,1) 35%, rgba(62ss,138,81,1) 100%);">
+        style="background: linear-gradient(90deg, rgba(50,82,58,1) 0%, rgba(39,104,55,1) 35%, rgba(62,138,81,1) 100%);">
             <div class="container">
                 <!--<a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'DMC') }}
