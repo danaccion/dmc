@@ -61,10 +61,6 @@
                                 </li> -->
                             @endif
                         @else
-<<<<<<< HEAD
-=======
-
->>>>>>> b44cc9c4b791efb45b5a35eba0d37b478152116b
                         @if (Auth::user()->is_admin)
                            <li class="nav-item">
                                     <a class="nav-link" href="/client/list/table"><k style="color:white;">History</k></a>
@@ -73,10 +69,6 @@
                                 <a class="nav-link" href="/history"><k style="color:white;">QuickPay Logs</k></a>
                             </li>-->
                         @endif
-<<<<<<< HEAD
-=======
-
->>>>>>> b44cc9c4b791efb45b5a35eba0d37b478152116b
 
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle  text text-light" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
