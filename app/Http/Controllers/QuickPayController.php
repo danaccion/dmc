@@ -75,7 +75,14 @@ class QuickPayController extends Controller
             $order_id = $this->encrypt($client->oGenerator->id);
 
             $string = $client->client_info->orig_amount;
-            $amount = str_replace('.', '', $string);
+            $amount = '';
+            if (strpos($string, '.') !== false) {
+                $amount = str_replace('.', '', $string);
+            } else {
+                $amount =  $string."00";
+            }
+
+
             $currency = $client->client_info->currency;
 
             $initform = array(
