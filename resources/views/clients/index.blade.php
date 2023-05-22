@@ -57,7 +57,9 @@
                                     </a>
                                 </div>
                                 <div class="col-md-5">
+
                                     <a href="pdf/{{ !empty($client->client_info->file) ? $client->client_info->file : 'Unknown' }}"
+
                                         class="btn btn-primary form-control rounded-0 mb-2"
                                         target="_blank">
                                         View Invoice
@@ -111,12 +113,14 @@
                                 disabled>
                                     {{ ucfirst($client->client_info->status) }}
                                     <i class="bi bi-credit-card-2-front float-end mt-1"></i>
+
                                 </button>
                             @else
                                 <button type="submit" onclick="return confirm('Please confirm transaction.')" class="btn btn-success form-control rounded-0" >
                                 Pay
                                 <i class="bi bi-credit-card-2-front float-end mt-1"></i>
                                 </button>
+
                             @endif
                             </div>
                         </form>
