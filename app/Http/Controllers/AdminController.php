@@ -85,10 +85,10 @@ class AdminController extends Controller
         $request->merge(['description' => $request->travel_description]);
         $request->merge(['currency' => $client1->client_currency]);
         $request->merge(['invoice_no' => $request->invoice_order_number]);
-        $request->merge(['orig_amount' => $request->total_amount_to_pay + $request->additional_fee]);
+        $request->merge(['orig_amount' => $request->total_amount_to_pay + ($request->total_amount_to_pay * ($request->additional_fee / 100))]);
         $request->merge(['transaction_id' => $request->transaction_number]);
-        $request->merge(['additional_fee' => $request->additional_fee]);
-
+        $request->merge(['additional_fee' => $request->total_amount_to_pay * ($request->additional_fee / 100) ]);
+       
         // 👇 replace numbers with empty string
         $result = str_replace('.', "", $request->total_amount_to_pay);
         $request->merge(['amount' => $result]);
@@ -138,9 +138,9 @@ class AdminController extends Controller
         $request->merge(['description' => $request->travel_description]);
         $request->merge(['currency' => $client1->client_currency]);
         $request->merge(['invoice_no' => $request->invoice_order_number]);
-        $request->merge(['orig_amount' => $request->total_amount_to_pay + $request->additional_fee]);
+        $request->merge(['orig_amount' => $request->total_amount_to_pay + ($request->additional_fee / 100) ]);
         $request->merge(['transaction_id' => $request->transaction_number]);
-        $request->merge(['additional_fee' => $request->additional_fee]);
+        $request->merge(['additional_fee' => ($request->additional_fee / 100) ]);
 
         // 👇 replace numbers with empty string
         $result = str_replace('.', "", $request->total_amount_to_pay);

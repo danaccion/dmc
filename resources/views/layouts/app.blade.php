@@ -6,7 +6,7 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
+    <link rel="icon" href="{{ asset('img/logo.svg') }}" type="image/x-icon">
     <title>
         @yield('title', 'DMC') - {{ config('app.name') }}
     </title>
@@ -62,6 +62,9 @@
                             @endif
                         @else
                         @if (Auth::user()->is_admin)
+                        <li class="nav-item">
+                                    <a class="nav-link" href="/admin"><k style="color:white;">Home</k></a>
+                           </li>
                            <li class="nav-item">
                                     <a class="nav-link" href="/client/list/table"><k style="color:white;">History</k></a>
                            </li>

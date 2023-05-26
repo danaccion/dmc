@@ -180,7 +180,7 @@
                         <input type="checkbox" id="additionalFeeCheckbox">
                     </div>
                     </div>
-                    <input type="text" class="form-control" id="additional_fee" value="1.25" name="additional_fee">
+                    <input type="text" class="form-control" id="additional_fee" value="1" name="additional_fee">
                 </div>
                 </div>
 
