@@ -1,6 +1,12 @@
 @extends('layouts.app')
 @section('title','Client')
 @section('content')
+<style>
+       .btn-gold {
+        background-color: #C48B36;
+        /* Add any other styling properties you desire */
+    }
+</style>
 <div class="container">
     <div class="row">
         <div class="col-md-3">
@@ -26,7 +32,7 @@
                                 <input type="search"  name="s" value="{{ $s }}" class="form-control rounded-0 mb-2" placeholder="Please enter your given 'Pay No' here">
                             </div>
                             <div class="col-md-3 mb-5">
-                                <button type="submit" class="btn btn-primary form-control rounded-0">
+                                <button type="submit" class="btn btn-gold form-control rounded-0">
                                     View
                                     <i class="bi bi-search float-end mt-1"> </i>
                                 </button>
@@ -49,7 +55,7 @@
                             <div class="row">
                                 <div class="col-md-5">
                                     <a href=""
-                                        class="btn btn-primary form-control rounded-0 mb-2"
+                                        class="btn btn-gold form-control rounded-0 mb-2"
                                         target="_blank"
                                         download="{{ !empty($client->client_info) ? $client->client_info->file : '' }}">
                                         Download Invoice
@@ -60,7 +66,7 @@
 
                                     <a href="pdf/{{ !empty($client->client_info->file) ? $client->client_info->file : 'Unknown' }}"
 
-                                        class="btn btn-primary form-control rounded-0 mb-2"
+                                        class="btn btn-gold form-control rounded-0 mb-2"
                                         target="_blank">
                                         View Invoice
                                         <i class="bi bi-view-list float-end mt-1"> </i>
@@ -116,7 +122,7 @@
 
                                 </button>
                             @else
-                                <button type="submit" onclick="return confirm('Please confirm transaction.')" class="btn btn-success form-control rounded-0" >
+                                <button type="submit" onclick="return confirm('Please confirm transaction.')" class="btn btn-gold form-control rounded-0" >
                                 Pay
                                 <i class="bi bi-credit-card-2-front float-end mt-1"></i>
                                 </button>
