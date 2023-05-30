@@ -168,6 +168,7 @@ class AdminController extends Controller
 
     public function search(Request $request)
     {
+        dd($request);
         $query = $request->input('query');
         $clientss = Client::where('name', 'LIKE', '%' . $query . '%')->where('status', 'on')->orderby('name', 'asc')->get();
         return response()->json($clientss);
