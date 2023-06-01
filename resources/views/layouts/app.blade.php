@@ -24,15 +24,6 @@
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
-    <style>
-      @media print {
-            header, footer {
-                display: block;
-                visibility: visible;
-                position: static;
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -140,6 +131,7 @@
     $("#print").on("click", function(){
         $(".alert").hide();
         $("#print").hide();
+        $("nav.navbar").hide();
         window.print();
     });
 
