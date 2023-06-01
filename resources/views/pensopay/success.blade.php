@@ -2,9 +2,11 @@
 
 @section('content')
 <div class="container">
+    <?php
+        echo ($status == 'Un-Paid' ? '' : $cif_table);
+    ?>
     <div class="alert alert-success" role="alert">
-    Your Payment {{ $status == 'Unpaid' ? 'is' : 'Has Been' }}  {{ $status }}
+    Your Payment {{ $status == 'Un-Paid' ? 'is' : 'Has Been' }}  {{ $status }}
     </div>
-    <?php echo $cif_table ?>
 </div>
 @stop

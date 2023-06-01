@@ -116,6 +116,7 @@ class ClientInfoController extends Controller
         $cif = ClientInfo::where('id', $id)->get();
         $cif2 = ClientInfo::where('id', $id)->get();
         $output = '';
+        $output .="<h1 style='text-align: center;line-height: 100px;'>Receipt</h1>";
         foreach ($cif2 as $item) {
             $output .= "<p class=''>Date: " . $item->updated_at . " </p>";
             $output .= "<p class=''>Receipt No: " . $item->transaction_id . " </p>";
@@ -147,7 +148,7 @@ class ClientInfoController extends Controller
         }
         $output .= '</table>';
         $output .= "<p class='text-muted fw-bold' style='text-align: right;line-height: 100px;'>Total: $item->currency $item->orig_amount </p>";
-        if ($status == 'approved' ||  ucfirst($item->status) == 'approved') {
+        if ($status != 'approved' ||  ucfirst($item->status) != 'approved') {
             $output .= "<button class='btn btn-primary' id='print' name='print'>
             <i class='fas fa-print'></i> 
          </button>";
