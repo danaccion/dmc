@@ -24,6 +24,15 @@
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
+    <style>
+      @media print {
+            header, footer {
+                display: block;
+                visibility: visible;
+                position: static;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -127,6 +136,14 @@
 
 <script>
  $(document).ready(function() {
+
+    $("#print").on("click", function(){
+        $(".alert").hide();
+        $("#print").hide();
+        window.print();
+    });
+
+
     $('.search').on('keyup', function() {
     var query = $(this).val();
     $.ajax({
@@ -214,7 +231,7 @@
 
 
     
-                $(".view").on("click", function(){
+     $(".view").on("click", function(){
         var viewId = $(this).val();
         $.ajax({
             url:"{{ route('/getInvoice') }}",
@@ -233,6 +250,8 @@
             },
         });
     });
+
+   
 });
 
 
