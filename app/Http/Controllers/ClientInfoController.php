@@ -13,20 +13,20 @@ class ClientInfoController extends Controller
         $search = $request->input('search');
         $sortBy = $request->input('sort_by', 'updated_at');
         $sortOrder = $request->input('sort_order', 'desc');
-        
+
         $cif = ClientInfo::where(function ($query) use ($search) {
             $query->where('id', 'LIKE', '%' . $search . '%')
                 ->orWhereHas('client', function ($query) use ($search) {
                     $query->where('name', 'LIKE', '%' . $search . '%')
-                    ->orWhere('pay_no', 'LIKE', '%' . $search . '%');
+                        ->orWhere('pay_no', 'LIKE', '%' . $search . '%');
                 })
                 ->orWhere('invoice_no', 'LIKE', '%' . $search . '%')
                 ->orWhere('status', 'LIKE', '%' . $search . '%');
         })
-        ->orderBy('created_at', $sortOrder ?: 'desc')
-        ->paginate(10);
-    
-    
+            ->orderBy('created_at', $sortOrder ?: 'desc')
+            ->paginate(10);
+
+
         $output = '<table class="table table-hover mb-2">
                     <tr>
                         <th>
@@ -75,29 +75,29 @@ class ClientInfoController extends Controller
                     </th>
                 </tr>';
 
-    $count = ($cif->currentPage() - 1) * $cif->perPage();
-    $button = '<i class="bi bi-eye-fill"></i>';
-    foreach ($cif as $item) {
-        $count++;
-        $output .= "<tr>";
-        $output .= "<td class='text-muted fw-bold'>" . $count . "</td>";
-        $output .= "<td class='text-muted fw-bold'>" . $item->id . "</td>";
-        $output .= "<td class='text-muted fw-bold'>" . optional($item->client)->name . "</td>";
-        $output .= "<td class='text-muted fw-bold'>" . optional($item->client)->pay_no . "</td>";
-        $output .= '<td><button id="view" class="view btn btn-primary" value="' . $item->invoice_no . '">' . $button . ' ' . $item->invoice_no . '</button></td>';
-        $output .= "<td class='text-muted fw-bold'>" . ucfirst($item->status) . "</td>";
-        $output .= "<td class='text-muted fw-bold'>" . $item->currency . "</td>";
-        $output .= "<td class='text-muted fw-bold'>" . $item->orig_amount . "</td>";
-        $output .= "<td class='text-muted fw-bold'>" . $item->created_at . "</td>";
-        $output .= "<td class='text-muted fw-bold'>" . $item->updated_at . "</td>";
-        $output .= "</tr>";
+        $count = ($cif->currentPage() - 1) * $cif->perPage();
+        $button = '<i class="bi bi-eye-fill"></i>';
+        foreach ($cif as $item) {
+            $count++;
+            $output .= "<tr>";
+            $output .= "<td class='text-muted fw-bold'>" . $count . "</td>";
+            $output .= "<td class='text-muted fw-bold'>" . $item->id . "</td>";
+            $output .= "<td class='text-muted fw-bold'>" . optional($item->client)->name . "</td>";
+            $output .= "<td class='text-muted fw-bold'>" . optional($item->client)->pay_no . "</td>";
+            $output .= '<td><button id="view" class="view btn btn-primary" value="' . $item->invoice_no . '">' . $button . ' ' . $item->invoice_no . '</button></td>';
+            $output .= "<td class='text-muted fw-bold'>" . ucfirst($item->status) . "</td>";
+            $output .= "<td class='text-muted fw-bold'>" . $item->currency . "</td>";
+            $output .= "<td class='text-muted fw-bold'>" . $item->orig_amount . "</td>";
+            $output .= "<td class='text-muted fw-bold'>" . $item->created_at . "</td>";
+            $output .= "<td class='text-muted fw-bold'>" . $item->updated_at . "</td>";
+            $output .= "</tr>";
+        }
+
+        $output .= '</table>';
+        $output .= $cif->appends(['search' => $search, 'sort_by' => $sortBy, 'sort_order' => $sortOrder])->links();
+
+        return view('clients.table', ['cif_table' => $output]);
     }
-
-    $output .= '</table>';
-    $output .= $cif->appends(['search' => $search, 'sort_by' => $sortBy, 'sort_order' => $sortOrder])->links();
-
-    return view('clients.table', ['cif_table' => $output]);
-}
 
     public function getSuccess(Request $request)
     {
@@ -114,13 +114,20 @@ class ClientInfoController extends Controller
     public function getClientInfo($id)
     {
         $cif = ClientInfo::where('id', $id)->get();
+        $cif2 = ClientInfo::where('id', $id)->get();
+        $output = '';
+        foreach ($cif2 as $item) {
+            $output .= "<p class=''>Date: " . $item->updated_at . " </p>";
+            $output .= "<p class=''>Receipt No: " . $item->transaction_id . " </p>";
+        }
         $count = 0;
-        $output = '<table class="table table-hover mb-2">
+        $output .= '<table class="table table-hover mb-2">
                         <tr>
                             <th>No.</th>
                             <th>Client id</th>
                             <th>Invoice No</th>
                             <th>Status</th>
+                            <th>Price</th>
                             <th>Date Paid</th>
                         </tr>';
 
@@ -132,13 +139,19 @@ class ClientInfoController extends Controller
             $output .= "<tr>";
             $output .= "<td class='text-muted fw-bold'>" . $count . "</td>";
             $output .= "<td class='text-muted fw-bold'>" . $item->id . "</td>";
-            $output .= '<td><button id="view" class="view btn btn-primary" value="' . $item->invoice_no . '">' . $button . ' ' . $item->invoice_no . '</button></td>';
+            $output .= '<td> ' . $item->invoice_no . '</td>';
             $output .= "<td class='text-muted fw-bold'>" . ucfirst($item->status) . "</td>";
+            $output .= "<td class='text-muted fw-bold'>" . $item->orig_amount . "</td>";
             $output .= "<td class='text-muted fw-bold'>" . $item->updated_at . "</td>";
             $output .= "</tr>";
         }
-
         $output .= '</table>';
+        $output .= "<p class='text-muted fw-bold' style='text-align: right;line-height: 100px;'>Total: $item->currency $item->orig_amount </p>";
+        if ($status == 'approved' ||  ucfirst($item->status) == 'approved') {
+            $output .= "<button class='btn btn-primary' id='print' name='print'>
+            <i class='fas fa-print'></i> 
+         </button>";
+        }
         return [$output, ucfirst($status)];
 
     }
