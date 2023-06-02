@@ -118,7 +118,9 @@ class ClientInfoController extends Controller
         $output = '';
         $output .="<h1 style='text-align: center;line-height: 100px;'>Receipt</h1>";
         foreach ($cif2 as $item) {
-            $output .= "<p class=''>Date: " . $item->updated_at . " </p>";
+            $timestamp = strtotime($item->updated_at);
+            $formattedDate = date("F j, Y", $timestamp);
+            $output .= "<p class=''>Date: " . $formattedDate . " </p>";
             $output .= "<p class=''>Receipt No: " . $item->transaction_id . " </p>";
         }
         $count = 0;
