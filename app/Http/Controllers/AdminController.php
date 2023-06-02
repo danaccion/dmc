@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Client;
 use App\Models\ClientInfo;
 use Illuminate\Support\Carbon;
+use DB;
 
 class AdminController extends Controller
 {
@@ -14,6 +15,7 @@ class AdminController extends Controller
      *
      * @return void
      */
+
     public function adminIndex(Request $request)
     {
         $clients = Client::where('status', 'on')->orderby('name', 'asc')->paginate(10); // retrieve all clients from the database
@@ -23,6 +25,17 @@ class AdminController extends Controller
             $transactionId = uniqid('TXN');
         }
 
+        $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $payNumber = '';
+        do {
+            $payNumber = '';
+            for ($i = 0; $i < 8; $i++) {
+                $randomIndex = mt_rand(0, strlen($characters) - 1);
+                $payNumber .= $characters[$randomIndex];
+            }
+        } while (Client::where('pay_no', $payNumber)->exists());
+
+        
         $s = $request->s ?? "";
         if (!empty($s)) {
             $client = Client::query()
@@ -37,6 +50,7 @@ class AdminController extends Controller
             'clients' => $clients,
             'client' => $client,
             's' => $s,
+            'payNumber' => $payNumber,
             'transactionId' => $transactionId,
             'text' => 'We hereby provide you with the service of paying with credit card online, at our new pay system.',
             'conditions' => 'DMC conditions for payment of our services by credit card: All payments by credit card to the DMC

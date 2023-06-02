@@ -17,6 +17,14 @@
                     </span>
                 </div>
             </div>
+            <br>
+            <center><h5><b>FAQ List</b></h5></center>
+                <ul class="list-group">
+                <li class="list-group-item">3D Secure not enrolled</li>
+                <li class="list-group-item">It should be a corporate card</li>
+                <li class="list-group-item">Limit on the card</li>
+                <li class="list-group-item">Allowed for international payments</li>
+                </ul>
         </div>
         <div class="col-md-9">
             <div class="card border-0 shadow-sm">

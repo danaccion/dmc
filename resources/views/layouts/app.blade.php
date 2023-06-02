@@ -8,7 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="{{ asset('img/logo.svg') }}" type="image/x-icon">
     <title>
-        @yield('title', 'DMC') - {{ config('app.name') }}
+        @yield('title', 'DMC PAY')
     </title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
@@ -25,7 +25,38 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
 </head>
+<style>
+ .form-control:focus {
+  box-shadow: 0 0 0 0.1rem #C48B36;
+  border-color: #C48B36;
+  }
 
+  .form-check-input[type="radio"]:checked {
+  border-color: #C48B36; /* Change the border color when the radio button is checked */
+  background-color: #C48B36; /* Change the background color when the radio button is checked */
+  box-shadow: 0 0 0 0.1rem #C48B36; 
+  }
+
+  .form-check-input[type="radio"]:focus{
+  border-color: #C48B36; /* Change the border color when the radio button is checked */
+  background-color: #C48B36; /* Change the background color when the radio button is checked */
+  box-shadow: 0 0 0 0.1rem #C48B36; 
+  }
+
+  .form-check-input[type="checkbox"]:checked {
+  border-color: #C48B36; /* Change the border color when the radio button is checked */
+  background-color: #C48B36; /* Change the background color when the radio button is checked */
+  box-shadow: 0 0 0 0.1rem #C48B36; 
+  }
+
+  .form-check-input[type="checkbox"]:focus{
+  border-color: #C48B36; /* Change the border color when the radio button is checked */
+  background-color: #C48B36; /* Change the background color when the radio button is checked */
+  box-shadow: 0 0 0 0.1rem #C48B36; 
+  }
+
+
+</style>
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light shadow-sm"

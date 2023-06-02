@@ -10,6 +10,7 @@
   });
 </script>
 @section('content')
+
 @if(session('success'))
     <div class="alert alert-success">
         {{ session('success') }}
@@ -65,6 +66,76 @@
                 </thead>
                 <br>
                 <tbody>
+
+      <table class="table" style="font-size:13px;">
+      <thead>
+        <tr>
+          <th>Transaktionspriser</th>
+          <th></th>
+          <th></th>
+        </tr>
+        <tr>
+          <th>Serviceafgifter</th>
+          <th>%</th>
+          <th>DKK</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Visa og Mastercard debetkort</td>
+          <td>0,74%</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>Visa og Mastercard kreditkort</td>
+          <td>0,99%</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>JCB og UnionPay</td>
+          <td>3,85%</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>Diners/Discover</td>
+          <td>3,75%</td>
+          <td>-</td>
+        </tr>
+        <thead>
+        <tr>
+          <th>Tillægssatser ud over serviceafgifter</th>
+          <th>%</th>
+          <th>DKK</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Firmakort</td>
+          <td>0,80%</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>Udenlandske kort (EU)</td>
+          <td>0,00%</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>Udenlandske kort (ikke EU)</td>
+          <td>1,20%</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>Card not present transaktioner og selvbetjente automater</td>
+          <td>0,39%</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>Processing-gebyr pr. transaktion</td>
+          <td>-</td>
+          <td>0,19</td>
+        </tr>
+      </tbody>
+    </table>
                   <!--  @foreach ($clients as $client)
                         <tr>
                             <td>{{ $client->name }}</td>
@@ -111,7 +182,7 @@
 
                 <div class="form-group">
                     <label for="client_pay_number">Client Pay Number</label>
-                    <input type="number" class="form-control" id="client_pay_number" name="client_pay_number" required>
+                    <input type="text" class="form-control" id="client_pay_number" name="client_pay_number" value=" {{$payNumber}}" required>
                 </div>
 
                 <div class="form-group">
@@ -142,25 +213,25 @@
             <div class="form-group">
                 <label for="currency">Select a currency:</label>
                 <div class="form-check">
-                    <input class="form-check-input" style="background-color: #A8A8A7;border-color: #A8A8A7;" type="radio" name="currency" id="currency1" value="DKK" required>
+                    <input class="form-check-input" type="radio" name="currency" id="currency1" value="DKK" required>
                     <label class="form-check-label" for="currency1">
                         DKK
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" style="background-color: #A8A8A7;border-color: #A8A8A7;" type="radio" name="currency" id="currency2" value="SEK">
+                    <input class="form-check-input"  type="radio" name="currency" id="currency2" value="SEK">
                     <label class="form-check-label" for="currency2">
                         SEK
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" style="background-color: #A8A8A7;border-color: #A8A8A7;" type="radio" name="currency" id="currency3" value="NOK">
+                    <input class="form-check-input"  type="radio" name="currency" id="currency3" value="NOK">
                     <label class="form-check-label" for="currency3">
                         NOK
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" style="background-color: #A8A8A7;border-color: #A8A8A7;" type="radio" name="currency" id="currency4" value="EUR">
+                    <input class="form-check-input" type="radio" name="currency" id="currency4" value="EUR">
                     <label class="form-check-label" for="currency4">
                         EUR
                     </label>
@@ -177,7 +248,7 @@
                 <div class="input-group">
                     <div class="input-group-append" style="background-color:none" >
                     <div class="input-group-text"> <br>
-                        <input type="checkbox" id="additionalFeeCheckbox">
+                        <input type="checkbox" class="form-check-input" id="additionalFeeCheckbox">
                     </div>
                     </div>
                     <input type="text" class="form-control" id="additional_fee" value="1" name="additional_fee">
@@ -185,7 +256,7 @@
                 </div>
 
                 <br>
-                <button type="submit" class="btn" style="background-color:#A8A8A7">Submit</button>
+                <button type="submit" class="btn" style="background-color:#C48B36;">Submit</button>
             </form>
         </div>
     </div>
