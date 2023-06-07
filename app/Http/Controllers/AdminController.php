@@ -25,7 +25,7 @@ class AdminController extends Controller
             $transactionId = uniqid('TXN');
         }
 
-        $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $characters = '0123456789';
         $payNumber = '';
         do {
             $payNumber = '';
