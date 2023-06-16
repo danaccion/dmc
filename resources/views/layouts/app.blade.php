@@ -26,6 +26,10 @@
 
 </head>
 <style>
+  #view{
+    background-color:#C48B36;
+    border-color: #C48B36;
+  }
  .form-control:focus {
   box-shadow: 0 0 0 0.1rem #C48B36;
   border-color: #C48B36;

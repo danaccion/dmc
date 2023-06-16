@@ -7,6 +7,7 @@ use App\Models\ClientInfo;
 
 class ClientInfoController extends Controller
 {
+    
     //
     public function getAllClientInfo(Request $request)
     {
@@ -73,6 +74,11 @@ class ClientInfoController extends Controller
                         <a href="?search=' . $search . '&sort_by=created_at&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
                         <a href="?search=' . $search . '&sort_by=created_at&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
                     </th>
+                    <th>
+                    Delete
+                    <a href="?search=' . $search . '&sort_by=created_at&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
+                    <a href="?search=' . $search . '&sort_by=created_at&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
+                </th>
                 </tr>';
 
         $count = ($cif->currentPage() - 1) * $cif->perPage();
@@ -90,6 +96,8 @@ class ClientInfoController extends Controller
             $output .= "<td class='text-muted fw-bold'>" . $item->orig_amount . "</td>";
             $output .= "<td class='text-muted fw-bold'>" . $item->created_at . "</td>";
             $output .= "<td class='text-muted fw-bold'>" . $item->updated_at . "</td>";
+            $output .= "<td><span class='bi bi-trash' style='color:red; font-size:22px;'></span></td>";
+           // $output .= '<td><button class="delete btn btn-danger" data-id="' . $item->id . '">Delete</button></td>';
             $output .= "</tr>";
         }
 

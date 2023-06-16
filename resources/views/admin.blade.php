@@ -191,7 +191,7 @@
                 </div>
                 <br>
                 <div class="form-group">
-                    <label for="invoice_file">Upload Invoice</label>
+                    <label for="invoice_file">Invoice as .pdf </label>
                     <input type="file" class="form-control-file" id="invoice_file" name="invoice_file" required>
                 </div>
                 <br>
@@ -251,7 +251,7 @@
                         <input type="checkbox" class="form-check-input" id="additionalFeeCheckbox">
                     </div>
                     </div>
-                    <input type="text" class="form-control" id="additional_fee" value="1" name="additional_fee">
+                    <input type="text" class="form-control" id="additional_fee" value="3" name="additional_fee">
                 </div>
                 </div>
 

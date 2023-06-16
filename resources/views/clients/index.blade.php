@@ -6,6 +6,10 @@
         background-color: #C48B36;
         /* Add any other styling properties you desire */
     }
+    .btn-gold:hover{
+        background-color: #C48B36;
+        /* Add any other styling properties you desire */
+    }
 </style>
 <div class="container">
     <div class="row">
@@ -20,10 +24,10 @@
             <br>
             <center><h5><b>FAQ List</b></h5></center>
                 <ul class="list-group">
-                <li class="list-group-item">3D Secure not enrolled</li>
-                <li class="list-group-item">It should be a corporate card</li>
-                <li class="list-group-item">Limit on the card</li>
-                <li class="list-group-item">Allowed for international payments</li>
+                <li class="list-group-item">3D Secure must be active/enrolled</li>
+                <li class="list-group-item">You can only use a corporate card</li>
+                <li class="list-group-item">Check the Payment limit on the card</li>
+                <li class="list-group-item">The Card must be approved for international payments</li>
                 </ul>
         </div>
         <div class="col-md-9">
@@ -48,18 +52,17 @@
                     </form>
                         @if(!empty($client))
                         <div class="col-md-12 mb-5">
-                            <h3 class="text-muted"> Company Name, </h3>
                             <span class="text-muted">
                                 <h5 class="fw-bold">
                                     {{ !empty($client) ? $client->name : 'Unknown' }}
                                 </h5>
-                                <div class="text-muted text-xs">
+                              <!--  <div class="text-muted text-xs">
                                     {{ !empty($client) ? $client->country : 'Unknown' }}
-                                </div>
+                                </div> -->
                             </span>
                         </div>
                         <div class="col-md-12 mb-2">
-                            <label class="text-muted"> You can see your invoice here </label>
+                            <!-- <label class="text-muted"> You can see your invoice here </label> -->
                             <div class="row">
                                 <div class="col-md-5">
                                     <a href=""
@@ -83,18 +86,18 @@
                             </div>
                         </div>
                         <div class="col-md-12 mb-2">
-                            <span class="text-muted"> Your order no. is
+                            <span class="text-muted"> Invoice no.
                                 <h3 class="fw-bold">
                                     {{ !empty($client->client_info) ? $client->client_info->invoice_no : 'No data'}}
                                 </h3>
                             </span>
-                            <span class="text-muted"> Original Amount
+                            <span class="text-muted"> Invoice Amount
                                 <h3 class="fs-5">
                                     {{ !empty($client->client_info) ? $client->client_info->currency : '' }}
                                     {{ !empty($client->client_info) ? $client->client_info->orig_amount - $client->client_info->additional_fee  : '0.00' }}
                                 </h3>
                             </span>
-                            <span class="text-muted"> Additional Fee:
+                            <span class="text-muted"> Domestic credit card fee
                                 <h3 class="fs-5">
                                     {{ !empty($client->client_info) ? $client->client_info->currency : '' }}
                                     {{ !empty($client->client_info) ? $client->client_info->additional_fee : '0.00' }}

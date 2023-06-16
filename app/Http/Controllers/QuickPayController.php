@@ -459,7 +459,7 @@ class QuickPayController extends Controller
                         $output .= "<td>" . $item['operations'][0]['created_at'] . "</td>";
                     } else {
                         $output .= "<td>0</td>";
-                        $output .= '<td class="mt-2 badge bg-secondary">Un-Paid</td>';
+                        $output .= '<td class="mt-2 badge bg-secondary">Unpaid</td>';
                         $output .= "<td>" . $item['created_at'] . "</td>";
                     }
                     $output .= "</tr>";
