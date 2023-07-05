@@ -86,7 +86,7 @@ class QuickPayController extends Controller
             $currency = $client->client_info->currency;
 
             $initform = array(
-                'amount' => $amount + (($client->client_info->additional_fee / 100) * $client->client_info->orig_amount),
+                'amount' => $amount,
                 'order_id' => $order_id,
                 'currency' => $client->client_info->currency,
                 'invoice_address[company_name]' => $client->name,
