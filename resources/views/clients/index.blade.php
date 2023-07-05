@@ -94,21 +94,21 @@
                             <span class="text-muted"> Invoice Amount
                                 <h3 class="fs-5">
                                     {{ !empty($client->client_info) ? $client->client_info->currency : '' }}
-                                    {{ number_format(($client->client_info->orig_amount - $client->client_info->additional_fee), 2, ',', '.') }}
+                                    {{ number_format(($client->client_info->orig_amount), 2, ',', '.') }}
                                     <!--{{ !empty($client->client_info) ? $client->client_info->orig_amount - $client->client_info->additional_fee  : '0.00' }}-->
                                 </h3>
                             </span>
                             <span class="text-muted"> Domestic credit card fee
                                 <h3 class="fs-5">
                                     {{ !empty($client->client_info) ? $client->client_info->currency : '' }}
-                                    {{ number_format($client->client_info->additional_fee, 2, ',', '.') }}
+                                    {{ number_format(($client->client_info->additional_fee / 100) * $client->client_info->orig_amount, 2, ',', '.') }}
                                     <!--{{ !empty($client->client_info) ? $client->client_info->additional_fee : '0.00' }}-->
                                 </h3>
                             </span>
                             <span class="text-muted"> Total Amount to Pay:
                                 <h3 class="fw-bold">
                                     {{ !empty($client->client_info) ? $client->client_info->currency : '' }}
-                                    {{ number_format($client->client_info->orig_amount, 2, ',', '.') }}
+                                    {{ number_format($client->client_info->orig_amount + ($client->client_info->additional_fee / 100) * $client->client_info->orig_amount, 2, ',', '.') }}
                                     <!--{{ !empty($client->client_info) ? $client->client_info->orig_amount : '0.00' }}-->
                                 </h3>
                             </span>

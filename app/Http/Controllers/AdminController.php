@@ -101,7 +101,8 @@ class AdminController extends Controller
         $request->merge(['invoice_no' => $request->invoice_order_number]);
         $request->merge(['orig_amount' => floatval($request->total_amount_to_pay)]);
         $request->merge(['transaction_id' => $request->transaction_number]);
-        $request->merge(['additional_fee' =>  floatval($request->additional_fee * 100 / 100) ]);
+        $dummy = str_replace(',', '.', $request->additional_fee);
+        $request->merge(['additional_fee' =>  floatval($dummy * 100 / 100) ]);
        
         // 👇 replace numbers with empty string
         $result = str_replace('.', "", floatval($request->total_amount_to_pay));
