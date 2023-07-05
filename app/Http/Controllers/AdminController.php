@@ -99,12 +99,12 @@ class AdminController extends Controller
         $request->merge(['description' => $request->travel_description]);
         $request->merge(['currency' => $client1->client_currency]);
         $request->merge(['invoice_no' => $request->invoice_order_number]);
-        $request->merge(['orig_amount' => $request->total_amount_to_pay + ($request->total_amount_to_pay * ($request->additional_fee / 100))]);
+        $request->merge(['orig_amount' => floatval($request->total_amount_to_pay)]);
         $request->merge(['transaction_id' => $request->transaction_number]);
-        $request->merge(['additional_fee' => $request->total_amount_to_pay * ($request->additional_fee / 100) ]);
+        $request->merge(['additional_fee' =>  floatval($request->additional_fee * 100 / 100) ]);
        
         // 👇 replace numbers with empty string
-        $result = str_replace('.', "", $request->total_amount_to_pay);
+        $result = str_replace('.', "", floatval($request->total_amount_to_pay));
         $request->merge(['amount' => $result]);
         $request->merge(['post_id' => 0]);
         $currency = $client1->client_currency;
