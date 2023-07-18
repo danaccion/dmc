@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\CallbackResponseService;
 use App\Models\Client;
 use App\Models\ClientInfo;
 use App\Models\OrderIdGenerator;
@@ -11,7 +12,11 @@ use Config;
 
 class QuickPayController extends Controller
 {
-
+    private $callbackResponseService;
+    public function __construct(CallbackResponseService $callbackResponseService)
+    {
+        $this->callbackResponseService = $callbackResponseService;
+    }
     function encrypt($num)
     {
         // Return the result as a 6-digit integer
@@ -198,7 +203,9 @@ class QuickPayController extends Controller
         if ($is_authenticated) {
             // Request is authenticated
             // Check if the operation status is approved
-            $response = $this->getQuickPayStatus($data['operations'][0]['qp_status_code']);
+            // Call service to check if response has approved element on array
+            $isApproved = $this->callbackResponseService->getQpStatusCode($data['operations']);
+            $response = $this->getQuickPayStatus($isApproved);
 
             $response_array = json_decode($response, true);
 
@@ -226,6 +233,7 @@ class QuickPayController extends Controller
 
         // Prepare the response data
         $response_data = [
+            'checksum' => $checksum,
             'status_code' => $status_code,
             'status_message' => $status_message
         ];
@@ -277,7 +285,8 @@ class QuickPayController extends Controller
             40036 => "Request already processed",
             40037 => "Request processed",
             40038 => "Request pending",
-            40039 => "Request expired"
+            40039 => "Request expired",
+            30100 => "3D Secure is required"
         );
 
         if (array_key_exists($code, $status_codes)) {
@@ -435,7 +444,7 @@ class QuickPayController extends Controller
                     if (!empty($item['operations'])) {
                         $output .= "<td>" . $item['currency'] . " " . $item['operations'][0]['amount'] . "</td>";
                         if ($item['operations'][0]['qp_status_code'] == 20000) {
-                            $code = "Paid";
+                            $code = "Approved";
                         } else if ($item['operations'][0]['qp_status_code'] == 40000) {
                             $code = "Rejected";
                         } else if ($item['operations'][0]['qp_status_code'] == 50000) {
