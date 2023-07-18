@@ -98,7 +98,7 @@ class ClientInfoController extends Controller
             $output .= "<td class='text-muted fw-bold'>" . optional($item->client)->name . "</td>";
             $output .= "<td class='text-muted fw-bold'>" . optional($item->client)->pay_no . "</td>";
             $output .= '<td><button id="view" class="view btn btn-primary" value="' . $item->invoice_no . '">' . $button . ' ' . $item->invoice_no . '</button></td>';
-            $output .= "<td class='text-muted fw-bold'>" . ucfirst($item->status) . "</td>";
+            $output .= "<td class='text-muted fw-bold'>" . ($item->status === 'Approved' ? 'Paid' : 'Unpaid'). "</td>";
             $output .= "<td class='text-muted fw-bold'>" . $item->currency . "</td>";
             $output .= "<td class='text-muted fw-bold'>" . number_format($item->orig_amount + (($item->additional_fee / 100 ) * $item->orig_amount), 2, ',', '.')   . "</td>";
             $output .= "<td class='text-muted fw-bold'>" . $item->created_at . "</td>";
@@ -185,7 +185,7 @@ class ClientInfoController extends Controller
             $output .= "<td class='text-muted fw-bold'>" . $count . "</td>";
             $output .= "<td class='text-muted fw-bold'>" . $item->id . "</td>";
             $output .= '<td> ' . $item->invoice_no . '</td>';
-            $output .= "<td class='text-muted fw-bold'>" . ucfirst($item->status) . "</td>";
+            $output .= "<td class='text-muted fw-bold'>" . ($item->status === 'Approved' ? 'Paid' : 'Unpaid') . "</td>";
             $output .= "<td class='text-muted fw-bold'>" . $item->orig_amount . "</td>";
             $output .= "<td class='text-muted fw-bold'>" . $item->updated_at . "</td>";
             $output .= "</tr>";
