@@ -233,7 +233,6 @@ class QuickPayController extends Controller
 
         // Prepare the response data
         $response_data = [
-            'checksum' => $checksum,
             'status_code' => $status_code,
             'status_message' => $status_message
         ];
