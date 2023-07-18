@@ -435,7 +435,7 @@ class QuickPayController extends Controller
                     if (!empty($item['operations'])) {
                         $output .= "<td>" . $item['currency'] . " " . $item['operations'][0]['amount'] . "</td>";
                         if ($item['operations'][0]['qp_status_code'] == 20000) {
-                            $code = "Approved";
+                            $code = "Paid";
                         } else if ($item['operations'][0]['qp_status_code'] == 40000) {
                             $code = "Rejected";
                         } else if ($item['operations'][0]['qp_status_code'] == 50000) {
