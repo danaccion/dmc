@@ -31,7 +31,7 @@ Route::middleware('auth')->group(function () {
     // 
     Route::delete('/deletehistory/{id}', [ClientInfoController::class, 'deletehistory']);
 
-    //Route::get('/get-details/{id}', [ClientInfoController::class, 'get_details']);
+    Route::get('/get-details/{id}', [ClientInfoController::class, 'get_details']);
 
     Route::get('/history', [App\Http\Controllers\QuickPayController::class, 'getHistory'])->name('/history');
 
