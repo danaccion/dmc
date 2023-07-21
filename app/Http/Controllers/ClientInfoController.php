@@ -42,6 +42,9 @@ class ClientInfoController extends Controller
                             <a href="?search=' . $search . '&sort_by=client_id&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
                         </th>
                         <th>
+                            Order Id
+                        </th>
+                        <th>
                             Company Name
                         </th>
                         <th>
@@ -95,6 +98,7 @@ class ClientInfoController extends Controller
             $output .= "<tr>";
             $output .= "<td class='text-muted fw-bold'>" . $count . "</td>";
             $output .= "<td class='text-muted fw-bold'>" . $item->id . "</td>";
+            $output .= "<td class='text-muted fw-bold'>" .optional($item->client->orderId)->id . "</td>";
             $output .= "<td class='text-muted fw-bold'>" . optional($item->client)->name . "</td>";
             $output .= "<td class='text-muted fw-bold'>" . optional($item->client)->pay_no . "</td>";
             $output .= '<td><button id="view" class="view btn btn-primary" value="' . $item->invoice_no . '">' . $button . ' ' . $item->invoice_no . '</button></td>';
