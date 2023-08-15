@@ -197,7 +197,7 @@ class ClientInfoController extends Controller
             $output .= "</tr>";
         }
         $output .= '</table>';
-        $output .= "<p class='text-muted fw-bold' style='text-align: right;line-height: 100px;'>Total: $item->currency $item->orig_amount </p>";
+        $output .= "<p class='text-muted fw-bold' style='text-align: right;line-height: 100px;'>Total: $item->currency $amount </p>";
         if ($status != 'approved' || ucfirst($item->status) != 'approved') {
             $output .= "<button class='btn btn-primary' id='print' name='print'>
             <i class='fas fa-print'></i> 
