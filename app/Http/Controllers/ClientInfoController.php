@@ -191,7 +191,7 @@ class ClientInfoController extends Controller
             $output .= "<td class='text-muted fw-bold'>" . $item->id . "</td>";
             $output .= '<td> ' . $item->invoice_no . '</td>';
             $output .= "<td class='text-muted fw-bold'>" . ($item->status === 'Approved' ? 'Paid' : 'Unpaid') . "</td>";
-            $string = number_format($item->orig_amount + (($item->orig_amount->additional_fee / 100) * $item->orig_amount), 2, ',', '.');
+            $string = number_format($item->orig_amount + (($item->additional_fee / 100) * $item->orig_amount), 2, ',', '.');
             $amount = str_replace('.', '', $string); // Remove the dot (.) as the thousands separator
             $amount = str_replace(',', '', $amount);
             $output .= "<td class='text-muted fw-bold'>" . $amount. "</td>";
