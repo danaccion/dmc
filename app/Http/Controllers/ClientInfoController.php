@@ -176,6 +176,8 @@ class ClientInfoController extends Controller
                             <th>Client id</th>
                             <th>Invoice No</th>
                             <th>Status</th>
+                            <th>Amount</th>
+                            <th>Fee</th>
                             <th>Price</th>
                             <th>Date Paid</th>
                         </tr>';
@@ -191,6 +193,8 @@ class ClientInfoController extends Controller
             $output .= "<td class='text-muted fw-bold'>" . $item->id . "</td>";
             $output .= '<td> ' . $item->invoice_no . '</td>';
             $output .= "<td class='text-muted fw-bold'>" . ($item->status === 'Approved' ? 'Paid' : 'Unpaid') . "</td>";
+            $output .= '<td> ' . $item->orig_amount . '</td>';
+            $output .= '<td> ' . ($item->additional_fee / 100) * $item->orig_amount. '</td>';
             $amount = number_format($item->orig_amount + (($item->additional_fee / 100) * $item->orig_amount), 2, ',', '.');
             $output .= "<td class='text-muted fw-bold'>" . $amount. "</td>";
             $output .= "<td class='text-muted fw-bold'>" . $item->updated_at . "</td>";
