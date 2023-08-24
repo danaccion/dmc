@@ -65,10 +65,10 @@
                             <!-- <label class="text-muted"> You can see your invoice here </label> -->
                             <div class="row">
                                 <div class="col-md-5">
-                                    <a href=""
+                                    <a href="pdf/{{ !empty($client->client_info->file) ? $client->client_info->file : 'Unknown' }}"
                                         class="btn btn-gold form-control rounded-0 mb-2"
                                         target="_blank"
-                                        download="{{ !empty($client->client_info) ? $client->client_info->file : '' }}">
+                                        download="DMCPay{{!empty($client->client_info->file) ? $client->client_info->file : 'Unknown' }}">
                                         Download Invoice
                                         <i class="bi bi-download float-end mt-1"> </i>
                                     </a>
