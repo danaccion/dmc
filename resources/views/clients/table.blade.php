@@ -10,6 +10,12 @@
     window.location.href = url;
 });
 
+$(document).on('click', '.receipt', function() {
+    var id = $(this).data('id');
+    var url = '/success/' + id;
+    window.location.href = url;
+});
+
     // Add this JavaScript code to your page or include it in a separate JavaScript file
 $(document).on('click', '.delete', function() {
     var id = $(this).data('id');
@@ -39,8 +45,8 @@ $(document).on('click', '.delete', function() {
 });
 </script>
 <div class="container">
-    <div class="row card col-md-12 shadow-sm border-0">
-    <div class="card-body">
+    <div class="row card col-md-16 shadow-sm border-0">
+    <div class="card-body" style="font-size:15px;">
         <form action="" method="GET">
             <div style="float: right;"> 
                 <input type="text" name="search" placeholder="Search">

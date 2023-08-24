@@ -126,6 +126,13 @@
                                     {{ $conditions }}
                                 </span>
                             </div>
+                            <div class="col-md-12 mb-2">
+                                <input type="radio" class="form-check-input mr-2" name="check" id="GFG"
+                    value="1" required>
+                                <span class="text-muted">
+                                I confirm that I use a corporate card
+                                </span>
+                            </div>
                             <div class="col-md-6">
                             @if (!empty($client->client_info->status) && (strcasecmp($client->client_info->status, 'paid') === 0 || strcasecmp($client->client_info->status, 'approved') === 0))
    
@@ -157,4 +164,9 @@
     {
         alert('aw')
     }
+
+    function myGeeks() {
+                var g = document.getElementById("GFG").required;
+                document.getElementById("sudo").innerHTML = g;
+            }
 </script>

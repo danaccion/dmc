@@ -170,6 +170,13 @@
         window.print();
     });
 
+    $("#downloadreceipt").on("click", function(){
+        $(".alert").hide();
+        $("#downloadreceipt").hide();
+        $("nav.navbar").hide();
+        window.download();
+    });
+
 
     $('.search').on('keyup', function() {
     var query = $(this).val();
