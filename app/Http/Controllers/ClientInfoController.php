@@ -79,10 +79,15 @@ class ClientInfoController extends Controller
                         <a href="?search=' . $search . '&sort_by=created_at&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
                     </th>
                     <th>
+                    Reciept
+                    <a href="?search=' . $search . '&sort_by=created_at&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
+                    <a href="?search=' . $search . '&sort_by=created_at&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
+                    </th>
+                    <th>
                     Recall
                     <a href="?search=' . $search . '&sort_by=created_at&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
                     <a href="?search=' . $search . '&sort_by=created_at&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
-                </th>
+                    </th>
                     <th>
                     Delete
                     <a href="?search=' . $search . '&sort_by=created_at&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
@@ -107,6 +112,7 @@ class ClientInfoController extends Controller
             $output .= "<td class='text-muted fw-bold'>" . number_format($item->orig_amount + (($item->additional_fee / 100) * $item->orig_amount), 2, ',', '.') . "</td>";
             $output .= "<td class='text-muted fw-bold'>" . $item->created_at . "</td>";
             $output .= "<td class='text-muted fw-bold'>" . $item->updated_at . "</td>";
+            $output .= '<td><button class="receipt btn btn-secondary" data-id="' . $item->id . '"><span class="bi bi-download" style="color:white; font-size:22px;"></span></button></td>';
             $output .= '<td><button class="showdetails btn btn-success" data-id="' . $item->id . '"><span class="bi bi-binoculars" style="color:white; font-size:22px;"></span></button></td>';
             $output .= '<td><button class="delete btn btn-danger" data-id="' . $item->id . '"><span class="bi bi-trash" style="color:white; font-size:22px;"></span></button></td>';
 
@@ -206,8 +212,16 @@ class ClientInfoController extends Controller
             $output .= "<button class='btn btn-primary' id='print' name='print'>
             <i class='fas fa-print'></i> 
          </button>";
+
+         /* <button class='download btn btn-success' id='download' name='download'>
+         <i class='fas fa-download'></i> 
+      </button> */
+     
+         
+         
         }
         return [$output, ucfirst($status)];
 
     }
+
 }
