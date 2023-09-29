@@ -32,7 +32,7 @@ class ClientInfoController extends Controller
         $output = '<table class="table table-hover mb-2">
                     <tr>
                         <th>
-                            Id
+                            Id <k style="color:white">name</k> <br> 
                             <a href="?search=' . $search . '&sort_by=id&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
                             <a href="?search=' . $search . '&sort_by=id&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
                         </th>
@@ -45,51 +45,58 @@ class ClientInfoController extends Controller
                             Order Id
                         </th> -->
                         <th>
-                            Company Name
+                            Company Name <br>
+                            <a href="?search=' . $search . '&sort_by=client_id&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
+                            <a href="?search=' . $search . '&sort_by=client_id&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
                         </th>
                         <th>
-                            Pay No
+                            Pay No <br>
+                            <a href="?search=' . $search . '&sort_by=client_id&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
+                            <a href="?search=' . $search . '&sort_by=client_id&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
                         </th>
                         <th>
-                            Invoice No
+                            Invoice No <br>
                             <a href="?search=' . $search . '&sort_by=invoice_no&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
                             <a href="?search=' . $search . '&sort_by=invoice_no&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
                         </th>
                         <th>
-                            Status
+                            Status <br>
                             <a href="?search=' . $search . '&sort_by=status&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
                             <a href="?search=' . $search . '&sort_by=status&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
                         </th>
                         <th>
-                            Currency
+                            Currency <br>
                             <a href="?search=' . $search . '&sort_by=currency&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
                             <a href="?search=' . $search . '&sort_by=currency&sort _order=desc"><i class="bi bi-arrow-down"></i></a>
                     </th>
                     <th>
-                        Amount
+                        Amount  <br>
+                        <a href="?search=' . $search . '&sort_by=updated_at&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
+                        <a href="?search=' . $search . '&sort_by=updated_at&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
+                        
                     </th>
                     <th>
-                        Date Paid
+                        Date Paid  <br>
                         <a href="?search=' . $search . '&sort_by=updated_at&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
                         <a href="?search=' . $search . '&sort_by=updated_at&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
                     </th>
                     <th>
-                        Date Created
+                        Date Created <br>
                         <a href="?search=' . $search . '&sort_by=created_at&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
                         <a href="?search=' . $search . '&sort_by=created_at&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
                     </th>
                     <th>
-                    Reciept
+                    Reciept <br>
                     <a href="?search=' . $search . '&sort_by=created_at&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
                     <a href="?search=' . $search . '&sort_by=created_at&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
                     </th>
                     <th>
-                    Recall
+                    Recall <br>
                     <a href="?search=' . $search . '&sort_by=created_at&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
                     <a href="?search=' . $search . '&sort_by=created_at&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
                     </th>
                     <th>
-                    Delete
+                    Delete <br>
                     <a href="?search=' . $search . '&sort_by=created_at&sort_order=asc"><i class="bi bi-arrow-up"></i></a>
                     <a href="?search=' . $search . '&sort_by=created_at&sort_order=desc"><i class="bi bi-arrow-down"></i></a>
                 </th>
@@ -168,7 +175,8 @@ class ClientInfoController extends Controller
         $cif = ClientInfo::where('id', $id)->get();
         $cif2 = ClientInfo::where('id', $id)->get();
         $output = '';
-        $output .= "<h1 style='text-align: center;line-height: 100px;'>Receipt</h1>";
+        $output .= "<h1 style='text-align: center;line-height: 100px;'>Receipt<img style='position: absolute; right: 30px; border: 2px solid #2b6139;padding: 10px;width:150px;'  src='/img/logo-svg.png'></h1>";
+        $output .= "";
         foreach ($cif2 as $item) {
             $timestamp = strtotime($item->updated_at);
             $formattedDate = date("F j, Y", $timestamp);
